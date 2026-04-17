@@ -69,8 +69,24 @@ export default function Inventory() {
       toast.error("Você não tem permissão para editar");
       return;
     }
+
+    let processedValue = value;
+    
+    // Autocorreção para campos numéricos
+    if (["quantidade_atual", "quantidade_ideal", "preco_ultima_compra"].includes(field)) {
+      // Se for string (vindo de um input text ou sanitização), limpa formatos estranhos
+      if (typeof value === "string") {
+        // Permite apenas números e um separador (ponto ou vírgula)
+        processedValue = value.replace(/[^\d.,]/g, "").replace(",", ".");
+        
+        // Evita múltiplos pontos
+        const parts = processedValue.split(".");
+        if (parts.length > 2) processedValue = parts[0] + "." + parts.slice(1).join("");
+      }
+    }
+
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, [field]: value, is_dirty: true } : item))
+      prev.map((item) => (item.id === id ? { ...item, [field]: processedValue, is_dirty: true } : item))
     );
   };
 
@@ -176,20 +192,34 @@ export default function Inventory() {
     return "#ef4444";
   };
 
+  // Helper to ensure numbers are correctly parsed (handling strings/commas)
+  const parseNum = (val) => {
+    if (typeof val === "number") return val;
+    if (!val) return 0;
+    return Number(String(val).replace(",", ".")) || 0;
+  };
+
   // Calculations
-  const itemsToBuy = items.filter((i) => i.quantidade_atual < i.quantidade_ideal);
+  const itemsToBuy = items.filter((i) => parseNum(i.quantidade_atual) < parseNum(i.quantidade_ideal));
   const totalCostEstimate = itemsToBuy.reduce((acc, curr) => {
-    const diff = curr.quantidade_ideal - curr.quantidade_atual;
-    return acc + diff * (curr.preco_ultima_compra || 0);
+    const ideal = parseNum(curr.quantidade_ideal);
+    const atual = parseNum(curr.quantidade_atual);
+    const preco = parseNum(curr.preco_ultima_compra);
+    const diff = Math.max(0, ideal - atual);
+    return acc + diff * preco;
   }, 0);
 
   const totalItems = items.length;
   const totalValue = items.reduce(
-    (acc, curr) => acc + curr.quantidade_atual * (curr.preco_ultima_compra || 0),
+    (acc, curr) => acc + parseNum(curr.quantidade_atual) * parseNum(curr.preco_ultima_compra),
     0
   );
   const stockHealth = items.length > 0
-    ? items.reduce((acc, curr) => acc + getStockPercentage(curr.quantidade_atual, curr.quantidade_ideal), 0) / items.length
+    ? items.reduce((acc, curr) => {
+        const atual = parseNum(curr.quantidade_atual);
+        const ideal = parseNum(curr.quantidade_ideal);
+        return acc + getStockPercentage(atual, ideal);
+      }, 0) / items.length
     : 100;
 
   return (
@@ -487,12 +517,15 @@ export default function Inventory() {
                           </div>
                         </td>
 
-                        {/* Atual */}
                         <td className="px-3 py-2 text-center" style={{ width: "100px" }}>
                           <input
-                            type="number"
-                            value={item.quantidade_atual}
+                            type="text"
+                            value={String(item.quantidade_atual).replace(".", ",")}
                             onChange={(e) => handleCellChange(item.id, "quantidade_atual", e.target.value)}
+                            onBlur={(e) => {
+                              const clean = parseNum(e.target.value);
+                              handleCellChange(item.id, "quantidade_atual", clean);
+                            }}
                             disabled={!isAdmin()}
                             className={`w-20 bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none ${
                               !isAdmin() ? "cursor-default" : ""
@@ -503,9 +536,13 @@ export default function Inventory() {
                         {/* Ideal */}
                         <td className="px-3 py-2 text-center" style={{ width: "100px" }}>
                           <input
-                            type="number"
-                            value={item.quantidade_ideal}
+                            type="text"
+                            value={String(item.quantidade_ideal).replace(".", ",")}
                             onChange={(e) => handleCellChange(item.id, "quantidade_ideal", e.target.value)}
+                            onBlur={(e) => {
+                              const clean = parseNum(e.target.value);
+                              handleCellChange(item.id, "quantidade_ideal", clean);
+                            }}
                             disabled={!isAdmin()}
                             className={`w-20 bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none opacity-80 ${
                               !isAdmin() ? "cursor-default" : ""
@@ -517,18 +554,22 @@ export default function Inventory() {
                         <td className="px-3 py-2 text-right" style={{ width: "120px" }}>
                           <div className="flex justify-end items-center gap-1">
                             <span className="text-slate-500 text-xs">R$</span>
-                            <input
-                              type="number"
-                              step="0.01"
-                              value={item.preco_ultima_compra}
-                              onChange={(e) =>
-                                handleCellChange(item.id, "preco_ultima_compra", e.target.value)
-                              }
-                              disabled={!isAdmin()}
-                              className={`w-24 bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 py-1.5 text-right outline-none text-blue-300 ${
-                                !isAdmin() ? "cursor-default" : ""
-                              }`}
-                            />
+                        <input
+                          type="text"
+                          value={String(item.preco_ultima_compra).replace(".", ",")}
+                          onChange={(e) =>
+                            handleCellChange(item.id, "preco_ultima_compra", e.target.value)
+                          }
+                          onBlur={(e) => {
+                            // Ao sair do campo, garante formato numérico limpo
+                            const clean = parseNum(e.target.value);
+                            handleCellChange(item.id, "preco_ultima_compra", clean);
+                          }}
+                          disabled={!isAdmin()}
+                          className={`w-24 bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 py-1.5 text-right outline-none text-blue-300 ${
+                            !isAdmin() ? "cursor-default" : ""
+                          }`}
+                        />
                           </div>
                         </td>
 
@@ -554,36 +595,35 @@ export default function Inventory() {
 
             {/* Footer Summary */}
             {items.length > 0 && (
-              <tfoot className="bg-black/80 border-t-2 border-purple-500/30 backdrop-blur-xl">
-                <tr className="font-bold">
-                  <td colSpan={2} className="px-4 py-6" style={{ width: "250px" }}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-cyan-400/10 flex items-center justify-center border border-cyan-400/20">
-                        <Zap size={18} className="text-cyan-400" />
+              <tfoot className="bg-black/90 border-t-2 border-purple-500/30 backdrop-blur-2xl">
+                <tr className="font-bold border-b border-white/5">
+                  <td colSpan={2} className="px-3 py-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-cyan-400/10 flex items-center justify-center border border-cyan-400/20">
+                        <Zap size={16} className="text-cyan-400" />
                       </div>
                       <div>
-                        <span className="text-xs font-heading font-bold uppercase tracking-wider text-slate-400 block">
-                          Resumo Analítico
+                        <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block">
+                          Resumo
                         </span>
-                        <span className="text-[10px] text-slate-500 font-mono">Consolidado Geral</span>
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-center border-l border-white/5" style={{ width: "150px" }}>
-                    <div className="text-[10px] font-heading uppercase tracking-widest text-slate-500 mb-1">Total Itens</div>
-                    <div className="text-xl text-white font-mono">{totalItems}</div>
+                  <td className="px-3 py-2 text-center border-l border-white/5">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Itens</div>
+                    <div className="text-base text-white font-mono">{totalItems}</div>
                   </td>
-                  <td className="px-4 py-4 text-center border-l border-white/5" style={{ width: "150px" }}>
-                    <div className="text-[10px] font-heading uppercase tracking-widest text-slate-500 mb-1">Em Falta</div>
-                    <div className="text-xl text-red-400 font-mono">{itemsToBuy.length}</div>
+                  <td className="px-3 py-2 text-center border-l border-white/5">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Falta</div>
+                    <div className="text-base text-red-400 font-mono">{itemsToBuy.length}</div>
                   </td>
-                  <td className="px-4 py-4 text-right border-l border-white/5 bg-white/5" style={{ width: "200px" }}>
-                    <div className="text-[10px] font-heading uppercase tracking-widest text-slate-500 mb-1 text-right">Valor em Estoque</div>
-                    <div className="text-base text-slate-300 font-mono">{formatCurrency(totalValue)}</div>
+                  <td colSpan={2} className="px-3 py-2 text-right border-l border-white/5 bg-white/5">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Estoque</div>
+                    <div className="text-sm text-slate-300 font-mono">{formatCurrency(totalValue)}</div>
                   </td>
-                  <td colSpan={isAdmin() ? 2 : 1} className="px-6 py-4 text-right border-l border-white/5 bg-emerald-500/5">
-                    <div className="text-[10px] font-heading uppercase tracking-widest text-emerald-500/80 mb-1 text-right">Custo para Repor</div>
-                    <div className="text-2xl text-emerald-400 font-mono tracking-tight" style={{ textShadow: "0 0 15px rgba(52,211,153,0.3)" }}>
+                  <td colSpan={isAdmin() ? 2 : 1} className="px-4 py-2 text-right border-l border-white/10 bg-emerald-500/10">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-emerald-400 mb-0.5">Reposição</div>
+                    <div className="text-xl text-emerald-400 font-mono tracking-tighter">
                       {formatCurrency(totalCostEstimate)}
                     </div>
                   </td>

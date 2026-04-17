@@ -97,7 +97,7 @@ function StatCard({ label, value, sublabel, icon: Icon, color, glow, delay, onCl
       onClick={onClick}
       className={`glass-card card-shine relative overflow-hidden group ${onClick ? "cursor-pointer" : ""}`}
       style={{
-        padding: "20px 24px",
+        padding: "16px 20px",
         transition: "transform 0.3s, box-shadow 0.3s, border-color 0.3s",
       }}
       whileHover={{
@@ -150,7 +150,7 @@ function StatCard({ label, value, sublabel, icon: Icon, color, glow, delay, onCl
               transition={{ delay: delay * 0.1 + 0.3, type: "spring", stiffness: 200 }}
               className="font-heading font-bold leading-none"
               style={{
-                fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
+                fontSize: "clamp(1.5rem, 2.5vw, 2.2rem)",
                 color: "#ffffff",
                 textShadow: `0 0 25px ${glow}, 0 0 10px ${glow}`,
               }}
@@ -237,22 +237,37 @@ export default function Dashboard() {
     const catMap = {};
 
     data.forEach((item) => {
-      const isMissing = Number(item.quantidade_atual) < Number(item.quantidade_ideal);
+      const atual = Number(item.quantidade_atual) || 0;
+      const ideal = Number(item.quantidade_ideal) || 1; // avoid div by zero
+      const itemHealth = Math.min(100, (atual / ideal) * 100);
+      const isMissing = atual < ideal;
+      
       if (isMissing) {
         missingCount++;
-        totalCost += (item.quantidade_ideal - item.quantidade_atual) * (item.preco_ultima_compra || 0);
+        totalCost += (ideal - atual) * (item.preco_ultima_compra || 0);
       }
+      
       const catName = item.categoria || "Geral";
-      if (!catMap[catName]) catMap[catName] = { nome: catName, total_itens: 0, em_falta: 0 };
+      if (!catMap[catName]) {
+        catMap[catName] = { nome: catName, total_itens: 0, em_falta: 0, soma_saude: 0 };
+      }
+      
       catMap[catName].total_itens++;
+      catMap[catName].soma_saude += itemHealth;
       if (isMissing) catMap[catName].em_falta++;
     });
+
+    const categories = Object.values(catMap).map(cat => ({
+      ...cat,
+      // Saúde real: média da saúde dos itens da categoria (100% se tudo estiver no ideal)
+      saude: Math.round(cat.soma_saude / cat.total_itens)
+    })).sort((a, b) => b.saude - a.saude); // Ordenar por saúde (menores primeiro pode ser útil, mas manteremos os maiores no topo conforme original)
 
     const newStats = {
       total,
       missing: missingCount,
       cost: totalCost,
-      categories: Object.values(catMap).sort((a, b) => b.total_itens - a.total_itens),
+      categories,
     };
 
     setPrevStats(stats);
@@ -264,12 +279,14 @@ export default function Dashboard() {
     return Math.round(((current - previous) / previous) * 100);
   };
 
-  const stockHealth = stats.total > 0 ? Math.round(((stats.total - stats.missing) / stats.total) * 100) : 100;
+  const totalAtualValue = items.reduce((acc, i) => acc + (Number(i.quantidade_atual) || 0), 0);
+  const totalIdealValue = items.reduce((acc, i) => acc + (Number(i.quantidade_ideal) || 0), 0);
+  const stockHealth = totalIdealValue > 0 ? Math.round(Math.min(100, (totalAtualValue / totalIdealValue) * 100)) : 100;
 
   if (loading) return null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Enhanced Banner with Live Clock ── */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -298,7 +315,7 @@ export default function Dashboard() {
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
             <div>
               <h1
-                className="font-heading font-bold text-3xl tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-300 to-cyan-300 mb-2 flex items-center gap-2"
+                className="font-heading font-bold text-2xl tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-300 to-cyan-300 mb-1 flex items-center gap-2"
                 style={{ filter: "drop-shadow(0 0 15px rgba(168,85,247,0.4))" }}
               >
                 <Activity className="text-purple-400" size={32} />
@@ -443,7 +460,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-2 mb-6 relative z-10">
             <Box size={18} style={{ color: "#a855f7" }} />
             <h2 className="font-heading font-bold text-base tracking-widest text-white uppercase">
-              Distribuição por Categoria
+              Saúde por Categoria
             </h2>
           </div>
 
@@ -460,7 +477,6 @@ export default function Dashboard() {
                   { bg: "#ef4444", light: "#f87171" },
                 ];
                 const color = colors[index % colors.length];
-                const percentage = (cat.total_itens / stats.total) * 100;
                 const hasIssues = cat.em_falta > 0;
 
                 return (
@@ -469,10 +485,10 @@ export default function Dashboard() {
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="relative p-5 rounded-xl overflow-hidden group cursor-pointer"
+                    className="relative p-4 rounded-xl overflow-hidden group cursor-pointer"
                     style={{
-                      background: `${color.bg}10`,
-                      border: `1px solid ${color.bg}30`,
+                      background: `${color.bg}08`,
+                      border: `1px solid ${color.bg}20`,
                     }}
                     whileHover={{
                       scale: 1.05,
@@ -488,13 +504,13 @@ export default function Dashboard() {
 
                     {/* Icon */}
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-3 relative z-10"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center mb-2 relative z-10"
                       style={{
                         background: `${color.bg}20`,
                         border: `1px solid ${color.bg}40`,
                       }}
                     >
-                      <Package size={24} style={{ color: color.light }} />
+                      <Package size={20} style={{ color: color.light }} />
                     </div>
 
                     {/* Content */}
@@ -505,24 +521,24 @@ export default function Dashboard() {
 
                       <div className="flex items-baseline gap-2 mb-2">
                         <span
-                          className="text-3xl font-bold"
+                          className="text-2xl font-bold"
                           style={{
                             color: color.light,
-                            textShadow: `0 0 20px ${color.bg}80`,
+                            textShadow: `0 0 15px ${color.bg}60`,
                           }}
                         >
-                          {cat.total_itens}
+                          {cat.saude}%
                         </span>
-                        <span className="text-sm text-slate-500 font-mono">
-                          {percentage.toFixed(0)}%
+                        <span className="text-[10px] text-slate-500 font-mono tracking-tighter">
+                          CAPACIDADE DO ESTOQUE ({cat.total_itens} {cat.total_itens === 1 ? 'ITEM' : 'ITENS'})
                         </span>
                       </div>
-
+ 
                       {/* Progress bar */}
-                      <div className="h-2 bg-black/40 rounded-full overflow-hidden mb-2">
+                      <div className="h-1.5 bg-black/40 rounded-full overflow-hidden mb-2">
                         <motion.div
                           initial={{ width: 0 }}
-                          animate={{ width: `${percentage}%` }}
+                          animate={{ width: `${cat.saude}%` }}
                           transition={{ duration: 1, delay: index * 0.1 + 0.3 }}
                           className="h-full rounded-full"
                           style={{
