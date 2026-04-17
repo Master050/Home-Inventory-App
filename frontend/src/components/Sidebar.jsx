@@ -83,8 +83,8 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
     <>
     <aside
       data-testid="sidebar"
-      className={`fixed top-0 h-screen z-[80] flex flex-col transition-all duration-300 ${
-        isMobile ? (collapsed ? "-translate-x-full" : "translate-x-0 shadow-[10px_0_60px_rgba(0,0,0,0.8)]") : "left-0"
+      className={`fixed top-0 left-0 h-screen z-[80] flex flex-col transition-all duration-300 ${
+        isMobile ? (collapsed ? "-translate-x-full" : "translate-x-0 shadow-[10px_0_60px_rgba(0,0,0,0.8)]") : ""
       }`}
       style={{
         width: isMobile ? "280px" : (collapsed ? "72px" : "272px"),
@@ -372,7 +372,7 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
             </div>
             <div>
               <p className="text-xs text-white font-body leading-none">Home Inventory</p>
-              <p className="text-xs font-mono mt-0.5" style={{ color: "#475569" }}>v2.0.0</p>
+              <p className="text-xs font-mono mt-0.5" style={{ color: "#475569" }}>v2.1.0</p>
             </div>
             <div
               className="ml-auto w-2 h-2 rounded-full flex-shrink-0"

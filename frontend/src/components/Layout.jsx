@@ -87,7 +87,7 @@ export default function Layout() {
               boxShadow: "0 0 15px rgba(168,85,247,0.5)",
             }}
           >
-            <ChevronRight size={20} className="text-white transition-transform group-active:translate-x-1" />
+            <Menu size={20} className="text-white transition-transform group-active:scale-90" />
           </button>
           <span 
             className="ml-4 font-heading font-bold text-lg tracking-tight"
@@ -102,13 +102,17 @@ export default function Layout() {
         </div>
       )}
 
-      {/* Mobile Overlay to close sidebar */}
-      {isMobile && !sidebarCollapsed && (
-        <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70]" 
-          onClick={() => setSidebarCollapsed(true)} 
-        />
-      )}
+      <AnimatePresence>
+        {isMobile && !sidebarCollapsed && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70]" 
+            onClick={() => setSidebarCollapsed(true)} 
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
       <Sidebar 

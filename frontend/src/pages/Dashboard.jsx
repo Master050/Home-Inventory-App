@@ -279,9 +279,14 @@ export default function Dashboard() {
     return Math.round(((current - previous) / previous) * 100);
   };
 
-  const totalAtualValue = items.reduce((acc, i) => acc + (Number(i.quantidade_atual) || 0), 0);
-  const totalIdealValue = items.reduce((acc, i) => acc + (Number(i.quantidade_ideal) || 0), 0);
-  const stockHealth = totalIdealValue > 0 ? Math.round(Math.min(100, (totalAtualValue / totalIdealValue) * 100)) : 100;
+  const stockHealth = items.length > 0
+    ? Math.round(items.reduce((acc, i) => {
+        const atual = Number(i.quantidade_atual) || 0;
+        const ideal = Number(i.quantidade_ideal) || 0;
+        const health = ideal === 0 ? 100 : Math.min((atual / ideal) * 100, 100);
+        return acc + health;
+      }, 0) / items.length)
+    : 100;
 
   if (loading) return null;
 
