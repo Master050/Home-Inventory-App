@@ -1,4 +1,4 @@
-# 🏠 Home Inventory v2.1 - Sistema de Gestão Doméstica
+# 🏠 Home Inventory v2.5.0 - Sistema de Gestão Doméstica
 
 ## 🎉 Bem-vindo ao seu sistema de inventário inteligente!
 
@@ -13,7 +13,6 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 - **Mãe**: Click automático (visualização)
 - **Pai**: Click automático (visualização)
 
-### URL:
 ### URL:
 Acesse através do link de produção (GitHub Pages).
 
@@ -147,7 +146,7 @@ Acesse através do link de produção (GitHub Pages).
 
 ---
 
-## 🐛 Correções Recentes (v2.1)
+## 🐛 Correções Recentes (v2.5.0)
 
 ✅ **Health Bar** - Shine contido na cor  
 ✅ **Footer Inventory** - Sem espaços vazios  
@@ -261,26 +260,32 @@ Mono: JetBrains Mono
 
 ---
 
-## 📝 Changelog
+## 📝 Changelog Granular (2026)
 
-### v2.1.0 (Atual):
-- Corrigida health bar
-- Novo gráfico de distribuição
-- Login ADMIN com senha
-- Cursor follower
-- Mobile otimizado
+### v2.5.0 (Hoje)
+- **UX Mobile**: Implementação de overlay animado ao abrir sidebar e ícone de Menu (Hamburguer).
+- **Consistência**: Versão oficial 2.5.0 sincronizada em todo o sistema.
 
-### v2.0.0:
-- Sistema de autenticação
-- Dashboard melhorado
-- Inventory redesenhado
-- Settings nova página
-- Easter eggs
+### v2.4.0 (Hoje)
+- **Fix Mobile**: Correção de posicionamento da Sidebar (`left-0`) para evitar desaparecimento em telas pequenas.
 
-### v1.0.0:
-- Versão inicial
-- CRUD básico
-- Supabase integration
+### v2.3.0 (Hoje)
+- **Labels Financeiros**: Renomeado "Estoque" para "Valor em Estoque" e "Reposição" para "Custo de Reposição".
+
+### v2.2.0 (Hoje)
+- **Métrica Unificada**: Sincronização da saúde global do Dashboard com a média aritmética do Inventário (max 100% por item).
+
+### v2.1.0 (Ontem)
+- **Dashboard UI**: Refinamento de escala visual e cards de categoria coloridos.
+- **Lógica Progressiva**: Ajuste para que barras de progresso cheguem a 100% sem transbordar excessos.
+
+### v2.0.0 (Ontem)
+- **Redesign Completo**: Nova interface Astra AI-inspired (Glassmorphism, Neon glows).
+- **Sistema de Autenticação**: Login com JWT e permissões de Admin/Viewer.
+- **Funcionalidades V2**: Dashboard interativo e Settings.
+
+### v1.0.0 (Abril 2026)
+- Versão inicial com CRUD básico e integração Supabase.
 
 ---
 
@@ -288,7 +293,7 @@ Mono: JetBrains Mono
 
 **Desenvolvido por:** Master050  
 **Design:** Astra Theme  
-**Versão:** 2.1.0  
+**Versão:** 2.5.0  
 **Licença:** Privada  
 **Ano:** 2024-2025
 
@@ -303,4 +308,4 @@ Explore todas as funcionalidades, descubra os easter eggs e aproveite a experiê
 ---
 
 **Status:** 🟢 PRODUÇÃO  
-**Última Atualização:** Dezembro 2024
+**Última Atualização:** 17 de Abril de 2026 (v2.5.0)
