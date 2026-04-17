@@ -372,7 +372,7 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
             </div>
             <div>
               <p className="text-xs text-white font-body leading-none">Home Inventory</p>
-              <p className="text-xs font-mono mt-0.5" style={{ color: "#475569" }}>v2.1.0</p>
+              <p className="text-xs font-mono mt-0.5" style={{ color: "#475569" }}>v2.5.0</p>
             </div>
             <div
               className="ml-auto w-2 h-2 rounded-full flex-shrink-0"

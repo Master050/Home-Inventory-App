@@ -1,23 +1,34 @@
-# Changelog
+# Changelog Granular - Home Inventory
 
-## [2.1.0] - 17-04-2026
+Este arquivo registra a evolução rápida do sistema v2.0 desde o início de seu ciclo de vida em 2026.
 
+## [2.5.0] - 17-04-2026
 ### Added
-- **Unificação de Saúde**: Sincronização da lógica de cálculo de saúde entre Dashboard e Inventário (Média de saúde individual limitada a 100%).
-- **UX Mobile**: Implementação de overlay animado (`AnimatePresence`) ao abrir/fechar a barra lateral no celular.
-- **Navegação**: Substituição do ícone de seta por ícone de Menu (Hambúrguer) no cabeçalho mobile para melhor usabilidade.
+- **Navegação Mobile**: Adicionado ícone de Menu (Hambúrguer) e overlay animado com desfoque suave para melhor UX em dispositivos móveis.
+- **Versão**: Sincronização global da versão 2.5.0 (UI, Configs e Docs).
 
+## [2.4.0] - 17-04-2026
 ### Fixed
-- **Sidebar Mobile**: Corrigido erro de enquadramento onde a barra lateral não aparecia ou ficava deslocada (falta de `left-0`).
-- **Rótulos Financeiros**: Atualização dos termos técnicos no rodapé do inventário ("Valor em Estoque" e "Custo de Reposição").
-- **Escalabilidade**: Ajuste de margens e preenchimento para visualização em telas pequenas.
+- **Mobile Frame**: Correção do erro de posicionamento da Sidebar (falta de `left-0`) que impedia a visualização correta no celular.
 
+## [2.3.0] - 17-04-2026
 ### Changed
-- Versão oficial do projeto elevada para **2.1.0**.
+- **Terminologia Financeira**: Atualização dos rótulos de rodapé para "Valor em Estoque" e "Custo de Reposição".
 
----
+## [2.2.0] - 17-04-2026
+### Fixed
+- **Lógica de Saúde**: Unificação do cálculo global de saúde do estoque entre Dashboard e Inventário (Média aritmética limitada a 100% por item).
+
+## [2.1.0] - 16-04-2026
+### Added
+- **Dashboard UI**: Refinamento da escala visual dos cards de categoria e implementação de cores dinâmicas.
+- **Progress Logic**: Ajuste nas barras de progresso para refletir o status de "completo" em 100%.
 
 ## [2.0.0] - 16-04-2026
-- **Astra-Design**: Nova identidade visual baseada em tons de roxo, ciano e efeitos de vidro (Glassmorphism).
-- **Responsividade**: Primeira implementação completa do layout adaptável.
-- **Gráficos**: Inclusão de estatísticas por categoria no Dashboard.
+### Added
+- **Redesign Astra**: Implementação da nova identidade visual Glassmorphism e Neon.
+- **Segurança**: Sistema de autenticação JWT com níveis de acesso (Admin/Viewer).
+- **Core V2**: Nova infraestrutura de navegação e Dashboard interativo.
+
+---
+*© 2024-2025 Home Inventory System*
