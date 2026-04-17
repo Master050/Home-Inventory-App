@@ -14,7 +14,8 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 - **Pai**: Click automático (visualização)
 
 ### URL:
-Acesse através do seu navegador na URL fornecida pelo Emergent.
+### URL:
+Acesse através do link de produção (GitHub Pages).
 
 ---
 
@@ -285,7 +286,7 @@ Mono: JetBrains Mono
 
 ## 🏆 Créditos
 
-**Desenvolvido por:** Emergent AI  
+**Desenvolvido por:** Master050  
 **Design:** Astra Theme  
 **Versão:** 2.1.0  
 **Licença:** Privada  

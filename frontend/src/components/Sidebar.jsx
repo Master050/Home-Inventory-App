@@ -81,17 +81,17 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
 
   return (
     <>
-      <aside
+    <aside
       data-testid="sidebar"
-      className={`fixed top-0 h-screen z-50 flex flex-col transition-all duration-300 ${
-        isMobile ? (collapsed ? "-translate-x-full" : "translate-x-0") : "left-0"
+      className={`fixed top-0 h-screen z-[80] flex flex-col transition-all duration-300 ${
+        isMobile ? (collapsed ? "-translate-x-full" : "translate-x-0 shadow-[10px_0_60px_rgba(0,0,0,0.8)]") : "left-0"
       }`}
       style={{
-        width: isMobile ? "272px" : (collapsed ? "72px" : "272px"),
-        background: "rgba(3,3,6,0.92)",
-        backdropFilter: "blur(30px)",
-        borderRight: "1px solid rgba(168,85,247,0.12)",
-        boxShadow: "4px 0 40px rgba(168,85,247,0.08)",
+        width: isMobile ? "280px" : (collapsed ? "72px" : "272px"),
+        background: isMobile ? "rgba(7,7,12,0.98)" : "rgba(3,3,6,0.92)",
+        backdropFilter: isMobile ? "none" : "blur(30px)", // Otimização performance mobile
+        borderRight: "1px solid rgba(168,85,247,0.15)",
+        boxShadow: "4px 0 40px rgba(0,0,0,0.5)",
       }}
     >
       {/* Logo */}
@@ -200,7 +200,7 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
           {navItems.map(({ path, label, icon: Icon }, idx) => {
             const isActive = location.pathname === path || location.pathname.startsWith(path + "/");
             return (
-              <li key={path} className="stagger-item" style={{ animationDelay: `${idx * 0.07}s` }}>
+              <li key={path} className={isMobile ? "" : "stagger-item"} style={{ animationDelay: isMobile ? "0s" : `${idx * 0.07}s` }}>
                 <NavItemWithTooltip label={label} collapsed={collapsed}>
                   <NavLink
                     to={path}

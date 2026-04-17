@@ -27,8 +27,15 @@ export default function Inventory() {
   const [saving, setSaving] = useState(false);
   const [scanningRow, setScanningRow] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const scrollRef = useRef(null);
   const { isAdmin } = useAuth();
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     fetchInventory();
@@ -46,11 +53,13 @@ export default function Inventory() {
       console.error(error);
     } else {
       setItems(data || []);
-      // Animate scanning effect
-      data?.forEach((_, idx) => {
-        setTimeout(() => setScanningRow(idx), idx * 50);
-      });
-      setTimeout(() => setScanningRow(null), (data?.length || 0) * 50 + 500);
+      // Animate scanning effect (Desktop only for performance)
+      if (window.innerWidth >= 768) {
+        data?.forEach((_, idx) => {
+          setTimeout(() => setScanningRow(idx), idx * 50);
+        });
+        setTimeout(() => setScanningRow(null), (data?.length || 0) * 50 + 500);
+      }
     }
     setLoading(false);
   };
@@ -375,7 +384,7 @@ export default function Inventory() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
-                        transition={{ delay: index * 0.05 }}
+                        transition={{ delay: isMobile ? 0 : index * 0.05 }}
                         className={`group hover:bg-white/5 transition-all duration-300 relative ${
                           item.is_dirty ? "bg-amber-900/10" : ""
                         } ${isScanning ? "bg-cyan-500/10" : ""}`}
@@ -467,7 +476,7 @@ export default function Inventory() {
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${percentage}%` }}
-                                transition={{ duration: 1, delay: index * 0.05 }}
+                                transition={{ duration: 1, delay: isMobile ? 0 : index * 0.05 }}
                                 className="h-full rounded-full"
                                 style={{
                                   background: `linear-gradient(90deg, ${getHealthColor(percentage)}, ${getHealthColor(percentage)}dd)`,
@@ -545,27 +554,38 @@ export default function Inventory() {
 
             {/* Footer Summary */}
             {items.length > 0 && (
-              <tfoot className="bg-black/60 border-t-2 border-purple-500/30">
+              <tfoot className="bg-black/80 border-t-2 border-purple-500/30 backdrop-blur-xl">
                 <tr className="font-bold">
-                  <td colSpan={2} className="px-4 py-4" style={{ width: "250px" }}>
-                    <div className="flex items-center gap-2">
-                      <Zap size={16} className="text-cyan-400" />
-                      <span className="text-sm font-heading uppercase tracking-wider text-slate-300">
-                        Resumo Total
-                      </span>
+                  <td colSpan={2} className="px-4 py-6" style={{ width: "250px" }}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-cyan-400/10 flex items-center justify-center border border-cyan-400/20">
+                        <Zap size={18} className="text-cyan-400" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-heading font-bold uppercase tracking-wider text-slate-400 block">
+                          Resumo Analítico
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-mono">Consolidado Geral</span>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-center" style={{ width: "180px" }}>
-                    <div className="text-xs text-slate-500 mb-1">Total Itens</div>
-                    <div className="text-lg text-white">{totalItems}</div>
+                  <td className="px-4 py-4 text-center border-l border-white/5" style={{ width: "150px" }}>
+                    <div className="text-[10px] font-heading uppercase tracking-widest text-slate-500 mb-1">Total Itens</div>
+                    <div className="text-xl text-white font-mono">{totalItems}</div>
                   </td>
-                  <td className="px-4 py-4 text-center" style={{ width: "100px" }}>
-                    <div className="text-xs text-slate-500 mb-1">Em Falta</div>
-                    <div className="text-lg text-red-400">{itemsToBuy.length}</div>
+                  <td className="px-4 py-4 text-center border-l border-white/5" style={{ width: "150px" }}>
+                    <div className="text-[10px] font-heading uppercase tracking-widest text-slate-500 mb-1">Em Falta</div>
+                    <div className="text-xl text-red-400 font-mono">{itemsToBuy.length}</div>
                   </td>
-                  <td colSpan={isAdmin() ? 4 : 3} className="px-4 py-4 text-right">
-                    <div className="text-xs text-slate-500 mb-1">Valor Total</div>
-                    <div className="text-lg text-emerald-400">{formatCurrency(totalValue)}</div>
+                  <td className="px-4 py-4 text-right border-l border-white/5 bg-white/5" style={{ width: "200px" }}>
+                    <div className="text-[10px] font-heading uppercase tracking-widest text-slate-500 mb-1 text-right">Valor em Estoque</div>
+                    <div className="text-base text-slate-300 font-mono">{formatCurrency(totalValue)}</div>
+                  </td>
+                  <td colSpan={isAdmin() ? 2 : 1} className="px-6 py-4 text-right border-l border-white/5 bg-emerald-500/5">
+                    <div className="text-[10px] font-heading uppercase tracking-widest text-emerald-500/80 mb-1 text-right">Custo para Repor</div>
+                    <div className="text-2xl text-emerald-400 font-mono tracking-tight" style={{ textShadow: "0 0 15px rgba(52,211,153,0.3)" }}>
+                      {formatCurrency(totalCostEstimate)}
+                    </div>
                   </td>
                 </tr>
               </tfoot>

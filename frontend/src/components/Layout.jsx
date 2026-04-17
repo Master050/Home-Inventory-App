@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Toaster } from "sonner";
-import { Menu } from "lucide-react";
+import { ChevronRight, ChevronLeft, Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
 import AstraBackground from "./AstraBackground";
 import CursorFollower from "./CursorFollower";
@@ -75,17 +75,22 @@ export default function Layout() {
       {/* Mobile Top Header */}
       {isMobile && (
         <div 
-          className="fixed top-0 left-0 right-0 h-16 z-40 bg-black/60 backdrop-blur-md flex items-center px-4"
+          className="fixed top-0 left-0 right-0 h-16 z-[60] bg-black/60 backdrop-blur-md flex items-center px-4"
           style={{ borderBottom: "1px solid rgba(168,85,247,0.15)" }}
         >
           <button 
             onClick={() => setSidebarCollapsed(false)} 
-            className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+            className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all hover:scale-110 active:scale-95 group"
+            style={{ 
+              background: "linear-gradient(135deg, #a855f7, #22d3ee)",
+              border: "2px solid rgba(0,0,0,0.8)",
+              boxShadow: "0 0 15px rgba(168,85,247,0.5)",
+            }}
           >
-            <Menu size={24} />
+            <ChevronRight size={20} className="text-white transition-transform group-active:translate-x-1" />
           </button>
           <span 
-            className="ml-3 font-heading font-bold text-lg"
+            className="ml-4 font-heading font-bold text-lg tracking-tight"
             style={{
               background: "linear-gradient(135deg, #c0e8ff 0%, #a78bfa 30%, #22d3ee 70%)",
               WebkitBackgroundClip: "text",
@@ -100,7 +105,7 @@ export default function Layout() {
       {/* Mobile Overlay to close sidebar */}
       {isMobile && !sidebarCollapsed && (
         <div 
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40" 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70]" 
           onClick={() => setSidebarCollapsed(true)} 
         />
       )}
