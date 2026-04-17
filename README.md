@@ -14,7 +14,7 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 - **Pai**: Click automático (visualização)
 
 ### URL:
-Acesse através do link de produção (GitHub Pages).
+[https://Master050.github.io/Home-Inventory-App/](https://Master050.github.io/Home-Inventory-App/)
 
 ---
 
@@ -109,12 +109,6 @@ Acesse através do link de produção (GitHub Pages).
 3. Check ações urgentes (itens em falta)
 4. Click nos cards para ir ao inventory
 
-### Settings:
-1. Ajuste preferências visuais
-2. Configure notificações
-3. Export/Import dados
-4. Veja info do sistema
-
 ---
 
 ## 🔑 Permissões
@@ -188,27 +182,6 @@ Acesse através do link de produção (GitHub Pages).
 
 ---
 
-## 💡 Dicas Pro
-
-### Produtividade:
-1. Use quick access no login
-2. Click nos cards do dashboard
-3. Atalho Ctrl+F para buscar
-4. Sidebar compacta (toggle)
-
-### Visual:
-1. Passe mouse nos cards (hover effects)
-2. Explore todos os tooltips
-3. Veja as animações de loading
-4. Teste o cursor follower
-
-### Mobile:
-1. Scroll horizontal nas tabelas
-2. Touch feedback nos botões
-3. Landscape mode otimizado
-
----
-
 ## 🔮 Próximas Features (Roadmap)
 
 - [ ] PWA (Progressive Web App)
@@ -219,44 +192,6 @@ Acesse através do link de produção (GitHub Pages).
 - [ ] Multi-idioma completo
 - [ ] Theme Builder
 - [ ] Widgets personalizáveis
-
----
-
-## 📞 Suporte
-
-### Problemas Comuns:
-
-**"Não consigo editar"**
-- Você está logado como ADMIN?
-- Veja se há ícone de cadeado
-
-**"Login não funciona"**
-- ADMIN exige digitar senha
-- Mãe/Pai são automáticos
-- Verifique credenciais
-
-**"Mobile está diferente"**
-- É otimizado para mobile
-- Todas funcionalidades presentes
-- Layout adaptado para tela menor
-
----
-
-## 🎨 Customização
-
-### Cores (TailwindCSS):
-```css
-purple-500: #a855f7
-cyan-500: #22d3ee
-emerald-500: #10b981
-```
-
-### Fontes:
-```css
-Heading: Rajdhani
-Body: Plus Jakarta Sans
-Mono: JetBrains Mono
-```
 
 ---
 
@@ -295,15 +230,7 @@ Mono: JetBrains Mono
 **Design:** Astra Theme  
 **Versão:** 2.5.0  
 **Licença:** Privada  
-**Ano:** 2024-2025
-
----
-
-## 🌟 Aproveite!
-
-Explore todas as funcionalidades, descubra os easter eggs e aproveite a experiência visual única! 
-
-**Dica Final:** Teste em diferentes dispositivos para ver todas as adaptações responsivas!
+**Ano:** 2026
 
 ---
 
