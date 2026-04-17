@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Home-Inventory-App/static/css/main.c5bff9f6.css",
+    "main.js": "/Home-Inventory-App/static/js/main.ed616145.js",
+    "index.html": "/Home-Inventory-App/index.html",
+    "main.c5bff9f6.css.map": "/Home-Inventory-App/static/css/main.c5bff9f6.css.map",
+    "main.ed616145.js.map": "/Home-Inventory-App/static/js/main.ed616145.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c5bff9f6.css",
+    "static/js/main.ed616145.js"
+  ]
+}
