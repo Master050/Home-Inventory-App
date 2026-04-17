@@ -1,16 +1,19 @@
-from fastapi import FastAPI, APIRouter, Query, HTTPException
+from fastapi import FastAPI, APIRouter, Query, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any, Annotated
 from bson import ObjectId
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import os
 import logging
 import httpx
 import uuid
 from pathlib import Path
+import jwt
+import bcrypt
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -25,6 +28,30 @@ api_router = APIRouter(prefix="/api")
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
+# ─── AUTH CONFIG ──────────────────────────────────────────────────────────────
+JWT_SECRET = os.environ.get("JWT_SECRET", "home-inventory-secret-key-2026")
+JWT_ALGORITHM = "HS256"
+security = HTTPBearer()
+
+# Hardcoded users (passwords are hashed with bcrypt)
+USERS_DB = {
+    "ADMIN": {
+        "username": "ADMIN",
+        "password_hash": bcrypt.hashpw("223344".encode(), bcrypt.gensalt()).decode(),
+        "role": "admin"
+    },
+    "Mãe": {
+        "username": "Mãe",
+        "password_hash": bcrypt.hashpw("123456".encode(), bcrypt.gensalt()).decode(),
+        "role": "viewer"
+    },
+    "Pai": {
+        "username": "Pai",
+        "password_hash": bcrypt.hashpw("123456".encode(), bcrypt.gensalt()).decode(),
+        "role": "viewer"
+    }
+}
 
 
 # ─── HELPERS ──────────────────────────────────────────────────────────────────
@@ -66,6 +93,11 @@ async def add_log(source: str, level: str, message: str, details: dict = None):
 
 
 # ─── MODELS ───────────────────────────────────────────────────────────────────
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
 class MessageCreate(BaseModel):
     content: str
 
@@ -122,6 +154,78 @@ class ConnectionTest(BaseModel):
 @api_router.get("/")
 async def root():
     return {"message": "Astra AI API v1.0", "status": "online"}
+
+
+# ─── AUTH HELPERS ─────────────────────────────────────────────────────────────
+def create_jwt_token(username: str, role: str) -> str:
+    """Create JWT token for authenticated user."""
+    payload = {
+        "sub": username,
+        "role": role,
+        "exp": datetime.now(timezone.utc) + timedelta(days=7)
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+
+def verify_jwt_token(token: str) -> dict:
+    """Verify and decode JWT token."""
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(401, "Token expirado")
+    except jwt.InvalidTokenError:
+        raise HTTPException(401, "Token inválido")
+
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    """Dependency to get current authenticated user."""
+    token = credentials.credentials
+    payload = verify_jwt_token(token)
+    username = payload.get("sub")
+    role = payload.get("role")
+    
+    if not username or username not in USERS_DB:
+        raise HTTPException(401, "Usuário não encontrado")
+    
+    return {"username": username, "role": role}
+
+
+# ─── AUTH ENDPOINTS ───────────────────────────────────────────────────────────
+@api_router.post("/auth/login")
+async def login(body: LoginRequest):
+    """Login endpoint - returns JWT token."""
+    user = USERS_DB.get(body.username)
+    
+    if not user:
+        raise HTTPException(401, "Usuário ou senha incorretos")
+    
+    # Verify password
+    if not bcrypt.checkpw(body.password.encode(), user["password_hash"].encode()):
+        raise HTTPException(401, "Usuário ou senha incorretos")
+    
+    # Create token
+    token = create_jwt_token(user["username"], user["role"])
+    
+    return {
+        "token": token,
+        "user": {
+            "username": user["username"],
+            "role": user["role"]
+        }
+    }
+
+
+@api_router.get("/auth/me")
+async def get_me(current_user: dict = Depends(get_current_user)):
+    """Get current user info."""
+    return current_user
+
+
+@api_router.post("/auth/logout")
+async def logout(current_user: dict = Depends(get_current_user)):
+    """Logout endpoint (token invalidation handled client-side)."""
+    return {"message": "Logout realizado com sucesso"}
 
 
 # ─── DASHBOARD ────────────────────────────────────────────────────────────────

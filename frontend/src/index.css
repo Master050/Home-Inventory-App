@@ -500,3 +500,452 @@ select.astra-select {
   color: white;
   padding: 10px 36px 10px 14px;
 }
+
+
+/* ── EXTRA FEATURES & EASTER EGGS ─────────────────────────────── */
+
+/* Ripple effect on buttons */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+.btn-ripple:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* Button particles effect */
+@keyframes particle-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Matrix rain effect (Easter egg) */
+@keyframes matrix-fall {
+  0% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.matrix-effect {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.matrix-char {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: #10b981;
+  text-shadow: 0 0 8px #10b981;
+  animation: matrix-fall linear infinite;
+}
+
+/* Loading skeleton */
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.02) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* Enhanced glow effects */
+@keyframes glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px currentColor) brightness(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 12px currentColor) brightness(1.2);
+  }
+}
+
+.glow-animate {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Sparkle animation */
+@keyframes sparkle {
+  0%, 100% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+.sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* Fade in up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+
+  /* Reduce motion for mobile */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Touch-friendly sizing */
+  button, a, input, select {
+    min-height: 44px;
+  }
+
+  /* Optimize scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Smooth transitions globally */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Custom toast animations */
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(calc(100% + 16px));
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(calc(100% + 16px));
+    opacity: 0;
+  }
+}
+
+[data-sonner-toast] {
+  animation: toast-slide-in 0.3s ease-out;
+}
+
+[data-sonner-toast][data-removed="true"] {
+  animation: toast-slide-out 0.2s ease-in;
+}
+
+/* Enhanced scrollbar with hover effect */
+::-webkit-scrollbar-thumb {
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.7);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(168, 85, 247, 0.9);
+}
+
+/* Status pulse animation */
+@keyframes status-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+}
+
+/* Responsive utilities */
+@media (max-width: 1024px) {
+  .hide-on-tablet {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Compact text on mobile */
+  h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem) !important;
+  }
+
+  h2 {
+    font-size: clamp(1.25rem, 4vw, 1.5rem) !important;
+  }
+
+  .glass-card {
+    padding: 16px !important;
+  }
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Reduced transparency for better performance */
+@media (prefers-reduced-transparency) {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+
+/* ── ENHANCED MOBILE STYLES ──────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  /* Better mobile header */
+  .mobile-header {
+    padding: 16px !important;
+  }
+
+  /* Compact stats cards */
+  .stat-card-mobile {
+    padding: 16px !important;
+  }
+
+  /* Better mobile table */
+  .mobile-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Larger touch targets */
+  button, a, .clickable {
+    min-height: 48px !important;
+    min-width: 48px !important;
+  }
+
+  /* Better mobile modals */
+  .mobile-modal {
+    margin: 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Hide less important elements on small screens */
+  .hide-mobile {
+    display: none !important;
+  }
+
+  /* Stack elements vertically */
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+
+  /* Full width on mobile */
+  .mobile-full {
+    width: 100% !important;
+  }
+
+  /* Smaller text on mobile */
+  h1 {
+    font-size: clamp(1.5rem, 6vw, 2rem) !important;
+  }
+
+  h2 {
+    font-size: clamp(1.25rem, 5vw, 1.5rem) !important;
+  }
+
+  /* Better padding on mobile */
+  .glass-card {
+    padding: 12px !important;
+  }
+
+  /* Compact buttons */
+  .btn-mobile {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* Better mobile inputs */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+
+  /* Mobile-optimized sidebar */
+  aside {
+    position: fixed !important;
+    left: -100% !important;
+    transition: left 0.3s ease !important;
+    z-index: 100 !important;
+  }
+
+  aside.mobile-open {
+    left: 0 !important;
+  }
+
+  /* Mobile overlay */
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 99;
+    backdrop-filter: blur(4px);
+  }
+
+  /* Better mobile nav */
+  .mobile-nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(3,3,6,0.95);
+    border-top: 1px solid rgba(168,85,247,0.3);
+    backdrop-filter: blur(20px);
+    padding: 12px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 50;
+  }
+
+  /* Mobile chart improvements */
+  .recharts-wrapper {
+    font-size: 10px !important;
+  }
+
+  /* Compact cards grid */
+  .mobile-card-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 896px) and (orientation: landscape) {
+  .mobile-landscape-compact {
+    padding: 8px !important;
+  }
+
+  h1 {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* Touch feedback */
+@media (hover: none) and (pointer: coarse) {
+  button:active, a:active, .clickable:active {
+    opacity: 0.7;
+    transform: scale(0.97);
+    transition: all 0.1s ease;
+  }
+
+  /* Better tap highlights */
+  * {
+    -webkit-tap-highlight-color: rgba(168,85,247,0.2);
+  }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Safe area insets for iPhone notch */
+  .ios-safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .ios-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Fix iOS scroll */
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Android specific fixes */
+@supports not (-webkit-touch-callout: none) {
+  /* Better scrollbars on Android */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+}

@@ -25,7 +25,7 @@ export default function AstraBackground() {
       <div style={{
         position: "absolute", width: "900px", height: "900px",
         top: "-300px", left: "-300px",
-        background: "radial-gradient(circle, rgba(168,85,247,0.30) 0%, rgba(124,58,237,0.18) 35%, transparent 65%)",
+        background: "radial-gradient(circle, rgba(168,85,247,0.35) 0%, rgba(124,58,237,0.22) 35%, transparent 65%)",
         borderRadius: "50%", filter: "blur(70px)",
         animation: "orb-drift-1 22s ease-in-out infinite",
       }} />
@@ -34,7 +34,7 @@ export default function AstraBackground() {
       <div style={{
         position: "absolute", width: "800px", height: "800px",
         bottom: "-250px", right: "-250px",
-        background: "radial-gradient(circle, rgba(34,211,238,0.28) 0%, rgba(6,182,212,0.15) 35%, transparent 65%)",
+        background: "radial-gradient(circle, rgba(34,211,238,0.33) 0%, rgba(6,182,212,0.20) 35%, transparent 65%)",
         borderRadius: "50%", filter: "blur(70px)",
         animation: "orb-drift-2 18s ease-in-out infinite",
       }} />
@@ -124,10 +124,10 @@ export default function AstraBackground() {
         animation: "aurora-shift 6s ease-in-out infinite",
       }} />
 
-      {/* Vignette menos severa */}
+      {/* Vignette menos severa e com tom roxo profundo */}
       <div style={{
         position: "absolute", inset: 0,
-        background: "radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(5,5,8,0.35) 100%)",
+        background: "radial-gradient(ellipse 110% 110% at 50% 50%, transparent 55%, rgba(9,7,20,0.15) 100%)",
       }} />
     </div>
   );

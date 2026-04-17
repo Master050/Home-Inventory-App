@@ -10,9 +10,9 @@ module.exports = {
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
-        "astra-bg": "#050508",
-        "astra-surface": "#0a0a0f",
-        "astra-highlight": "#12121a",
+        "astra-bg": "#090714",
+        "astra-surface": "#0f0c29",
+        "astra-highlight": "#1a1638",
         "astra-purple": "#a855f7",
         "astra-cyan": "#22d3ee",
         "astra-blue": "#4fc3f7",
