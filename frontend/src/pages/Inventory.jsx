@@ -638,7 +638,7 @@ export default function Inventory() {
                     <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block mb-0.5 whitespace-nowrap">
                       Resumo Sincronizado
                     </span>
-                    <div className="text-sm text-slate-500 font-mono italic">Cloud-Active</div>
+                    <div className="text-sm text-slate-500 font-mono italic text-pulse">Nuvem Conectada</div>
                   </td>
                   <td className="px-3 py-2 border-l border-white/5 text-center">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Total</div>
@@ -650,10 +650,10 @@ export default function Inventory() {
                   </td>
                   <td colSpan={2} className="px-3 py-2 text-center border-l border-white/5 bg-white/5">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-600 mb-0.5">Métrica</div>
-                    <div className="text-sm text-slate-600 font-mono">FIXED</div>
+                    <div className="text-sm text-slate-600 font-mono">CALIBRADO</div>
                   </td>
                   <td className="px-3 py-2 border-l border-white/5 text-right">
-                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5 italic">Stock Value</div>
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5 italic">Valor do Estoque</div>
                     <div className="text-sm text-blue-300 font-mono">{formatCurrency(totalValue)}</div>
                   </td>
                   <td colSpan={2} className="px-4 py-3 text-right border-l border-white/10 bg-emerald-500/10">
