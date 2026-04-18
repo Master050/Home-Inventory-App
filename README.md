@@ -1,4 +1,4 @@
-# 🏠 Home Inventory v2.6.0 - Sistema de Gestão Doméstica Proativa
+# 🏠 Home Inventory v2.6.3 - Sistema de Gestão Doméstica Proativa
 
 ## 🎉 Bem-vindo ao seu sistema de inventário inteligente!
 
@@ -113,24 +113,18 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 ## 📝 Changelog Recente (2026)
 
-### v2.6.2 (Agora)
+### v2.6.3 (Agora)
+- **UI Proporcional**: Ajustado o equilíbrio das colunas no inventário (Produto ganhou mais espaço, Unidade e Categoria ficaram mais compactos).
+- **Correção de Texto**: Nomes de produtos longos não são mais truncados agressivamente.
+- **Redocumentação**: Limpeza de duplicatas no manual técnico (README).
+
+### v2.6.2 (Recente)
 - **Correção de UI**: Corrigido o alinhamento do rodapé do Inventário (Custo de Reposição) que não cobria as colunas de Macros e Ações.
 - **Limpeza**: Removido o espaço vazio à direita no resumo financeiro da tabela.
 
-### v2.6.1 (Recente)
+### v2.6.1
 - **Correção de UI**: Ajustado o alinhamento de colunas no Inventário (Atual/Ideal/Status) que estava trocado.
 - **UX**: Adicionado painel de "Manual de Operação" no Dashboard para facilitar o entendimento das novas métricas.
-- **Visual**: Compactação da célula de Status/Local para manter a uniformidade das linhas.
-
-### v2.6.0 (Hoje)
-- **Gestão Proativa**: Adicionado Log de Desperdício e Ação Rápida no estoque.
-- **Saúde Nutricional**: Rastreamento de Macronutrientes e painel de Macros no Dashboard.
-- **Diferenciação Logística**: Suporte a Unidades de Medida e Endereçamento (Local de Armazenamento).
-- **Telegram Gateway**: Integração com Bot do Telegram para notificações proativas.
-
-### v2.5.1
-- **Fix Sidebar Mobile**: Migração para Framer Motion para eliminar bugs de enquadramento.
-- **UX Mobile**: Implementação de overlay animado e ícone de Menu (Hamburguer).
 
 ---
 
@@ -138,25 +132,10 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 **Desenvolvido por:** Master050  
 **Licença:** Privada  
-**Versão:** 2.6.2  
+**Versão:** 2.6.3  
 **Ano:** 2026
 
 ---
 
 **Status:** 🟢 PRODUÇÃO  
-**Última Atualização:** 18 de Abril de 2026 (v2.6.2)
-
----
-
-## 🏆 Créditos
-
-**Desenvolvido por:** Master050  
-**Design:** Astra Theme  
-**Versão:** 2.5.1  
-**Licença:** Privada  
-**Ano:** 2026
-
----
-
-**Status:** 🟢 PRODUÇÃO  
-**Última Atualização:** 17 de Abril de 2026 (v2.5.1)
+**Última Atualização:** 18 de Abril de 2026 (v2.6.3)

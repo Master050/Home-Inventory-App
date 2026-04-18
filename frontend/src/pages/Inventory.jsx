@@ -389,11 +389,11 @@ export default function Inventory() {
                 <th className="px-3 py-3" style={{ width: "50px" }}>
                   <Activity size={14} className="mx-auto" />
                 </th>
-                <th className="px-3 py-3" style={{ width: "200px" }}>Produto</th>
-                <th className="px-3 py-3" style={{ width: "120px" }}>Categoria</th>
-                <th className="px-3 py-3" style={{ width: "80px" }}>Un.</th>
-                <th className="px-3 py-3 text-center" style={{ width: "100px" }}>Atual</th>
-                <th className="px-3 py-3 text-center" style={{ width: "100px" }}>Ideal</th>
+                <th className="px-3 py-3" style={{ width: "280px" }}>Produto</th>
+                <th className="px-3 py-3" style={{ width: "110px" }}>Categoria</th>
+                <th className="px-3 py-3" style={{ width: "60px" }}>Un.</th>
+                <th className="px-3 py-3 text-center" style={{ width: "90px" }}>Atual</th>
+                <th className="px-3 py-3 text-center" style={{ width: "90px" }}>Ideal</th>
                 <th className="px-3 py-3" style={{ width: "140px" }}>Status/Local</th>
                 <th className="px-3 py-3 text-right" style={{ width: "110px" }}>Preço Un.</th>
                 <th className="px-3 py-3 text-center" style={{ width: "150px" }}>Macros (P/G/C)</th>
@@ -484,7 +484,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Product Name */}
-                        <td className="px-3 py-2" style={{ width: "200px" }}>
+                        <td className="px-3 py-2" style={{ width: "280px" }}>
                           <input
                             value={item.nome || ""}
                             onChange={(e) => handleCellChange(item.id, "nome", e.target.value)}
@@ -496,7 +496,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Category Badge */}
-                        <td className="px-3 py-2" style={{ width: "140px" }}>
+                        <td className="px-3 py-2" style={{ width: "110px" }}>
                           <select
                             value={item.categoria || "Geral"}
                             onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
@@ -510,7 +510,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Unit Selector */}
-                        <td className="px-3 py-2" style={{ width: "80px" }}>
+                        <td className="px-3 py-2" style={{ width: "60px" }}>
                           <select
                             value={item.unidade || "un"}
                             onChange={(e) => handleCellChange(item.id, "unidade", e.target.value)}
@@ -524,7 +524,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Atual */}
-                        <td className="px-3 py-2 text-center" style={{ width: "100px" }}>
+                        <td className="px-3 py-2 text-center" style={{ width: "90px" }}>
                           <input
                             type="text"
                             value={String(item.quantidade_atual).replace(".", ",")}
@@ -541,7 +541,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Ideal */}
-                        <td className="px-3 py-2 text-center" style={{ width: "100px" }}>
+                        <td className="px-3 py-2 text-center" style={{ width: "90px" }}>
                           <input
                             type="text"
                             value={String(item.quantidade_ideal).replace(".", ",")}
