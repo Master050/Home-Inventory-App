@@ -209,7 +209,13 @@ function StatCard({ label, value, sublabel, icon: Icon, color, glow, delay, onCl
 
 export default function Dashboard() {
   const [items, setItems] = useState([]);
-  const [stats, setStats] = useState({ total: 0, missing: 0, cost: 0, categories: [] });
+  const [stats, setStats] = useState({ 
+    total: 0, 
+    missing: 0, 
+    cost: 0, 
+    categories: [],
+    macros: { proteina: 0, gordura: 0, carboidrato: 0 } 
+  });
   const [loading, setLoading] = useState(true);
   const [prevStats, setPrevStats] = useState(null);
   const navigate = useNavigate();
@@ -257,6 +263,13 @@ export default function Dashboard() {
       if (isMissing) catMap[catName].em_falta++;
     });
 
+    // Macronutriente totals
+    const macros = data.reduce((acc, curr) => ({
+      proteina: acc.proteina + (Number(curr.proteina) || 0) * (Number(curr.quantidade_atual) || 0),
+      gordura: acc.gordura + (Number(curr.gordura) || 0) * (Number(curr.quantidade_atual) || 0),
+      carboidrato: acc.carboidrato + (Number(curr.carboidrato) || 0) * (Number(curr.quantidade_atual) || 0),
+    }), { proteina: 0, gordura: 0, carboidrato: 0 });
+
     const categories = Object.values(catMap).map(cat => ({
       ...cat,
       // Saúde real: média da saúde dos itens da categoria (100% se tudo estiver no ideal)
@@ -268,6 +281,7 @@ export default function Dashboard() {
       missing: missingCount,
       cost: totalCost,
       categories,
+      macros,
     };
 
     setPrevStats(stats);
@@ -450,6 +464,34 @@ export default function Dashboard() {
           glow="rgba(16,185,129,0.6)"
           delay={4}
         />
+      </div>
+
+      {/* ── Macronutrients Profile ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {[
+          { label: "Proteína Total", value: stats.macros.proteina, color: "#10b981", icon: Activity, unit: "g" },
+          { label: "Gordura Total", value: stats.macros.gordura, color: "#f59e0b", icon: Zap, unit: "g" },
+          { label: "Carboidratos", value: stats.macros.carboidrato, color: "#3b82f6", icon: Layers, unit: "g" },
+        ].map((macro, idx) => (
+          <motion.div
+            key={macro.label}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 * idx }}
+            className="glass-card p-4 flex items-center gap-4 border-l-4"
+            style={{ borderLeftColor: macro.color }}
+          >
+            <div className="p-3 rounded-xl bg-white/5">
+              <macro.icon size={20} style={{ color: macro.color }} />
+            </div>
+            <div>
+              <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{macro.label}</p>
+              <h3 className="text-xl font-bold text-white">
+                {Math.round(macro.value).toLocaleString('pt-BR')} {macro.unit}
+              </h3>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">

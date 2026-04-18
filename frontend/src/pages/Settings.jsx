@@ -17,6 +17,7 @@ import {
   Globe,
   Sparkles,
   CheckCircle2,
+  Send,
 } from "lucide-react";
 
 function SectionCard({ title, subtitle, icon: Icon, color, children }) {
@@ -65,11 +66,42 @@ export default function Settings() {
   const [language, setLanguage] = useState("pt-BR");
   const [autoBackup, setAutoBackup] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [telegramSettings, setTelegramSettings] = useState({
+    telegram_bot_token: "",
+    telegram_chat_id: "",
+    notification_hour: 10
+  });
 
-  const handleSavePreferences = () => {
-    // Simulate save
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 2000);
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const resp = await fetch("/api/settings");
+      if (resp.ok) {
+        const data = await resp.json();
+        setTelegramSettings(data);
+      }
+    } catch (e) {
+      console.error("Erro ao buscar configurações:", e);
+    }
+  };
+
+  const handleSavePreferences = async () => {
+    try {
+      const resp = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(telegramSettings)
+      });
+      if (resp.ok) {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 2000);
+      }
+    } catch (e) {
+      console.error("Erro ao salvar configurações:", e);
+    }
   };
 
   const handleExportData = () => {
@@ -299,6 +331,73 @@ export default function Settings() {
             </>
           )}
         </motion.button>
+      </SectionCard>
+
+      {/* Telegram Integration */}
+      <SectionCard
+        title="Gateway Telegram"
+        subtitle="configuração de notificações"
+        icon={Send}
+        color="#0ea5e9"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-mono text-slate-500 uppercase mb-2">Bot Token</label>
+            <input
+              type="password"
+              placeholder="Ex: 123456:ABC-DEF..."
+              className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white outline-none focus:border-sky-500/50"
+              value={telegramSettings.telegram_bot_token || ""}
+              onChange={(e) => setTelegramSettings({...telegramSettings, telegram_bot_token: e.target.value})}
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-mono text-slate-500 uppercase mb-2">Chat ID</label>
+            <input
+              type="text"
+              placeholder="Ex: -100123456789"
+              className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white outline-none focus:border-sky-500/50"
+              value={telegramSettings.telegram_chat_id || ""}
+              onChange={(e) => setTelegramSettings({...telegramSettings, telegram_chat_id: e.target.value})}
+            />
+          </div>
+          <div className="flex items-center justify-between p-4 rounded-xl bg-black/20 border border-white/10">
+            <div>
+              <p className="text-sm font-body font-medium text-white">Horário de Notificação</p>
+              <p className="text-xs text-slate-500 font-mono">Resumo matinal diário</p>
+            </div>
+            <select
+              value={telegramSettings.notification_hour}
+              className="bg-black/40 border border-white/10 rounded px-2 py-1 text-white text-xs outline-none"
+              onChange={(e) => setTelegramSettings({...telegramSettings, notification_hour: Number(e.target.value)})}
+            >
+              {[8, 9, 10, 11, 12].map(h => <option key={h} value={h}>{h}:00</option>)}
+            </select>
+          </div>
+          
+          <div className="flex gap-2">
+            <button
+              onClick={handleSavePreferences}
+              className="flex-1 py-2 bg-sky-600/20 border border-sky-600/40 text-sky-400 rounded-xl hover:bg-sky-600/30 transition-all font-mono text-xs uppercase"
+            >
+              Atualizar Gateway
+            </button>
+            <button
+              onClick={async () => {
+                try {
+                  const resp = await fetch("/api/telegram/test", { method: "POST" });
+                  if (resp.ok) alert("Mensagem de teste enviada!");
+                  else alert("Erro ao enviar teste. Verifique o Token e Chat ID.");
+                } catch (e) {
+                  alert("Erro de conexão com o servidor.");
+                }
+              }}
+              className="px-4 py-2 bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 rounded-xl hover:bg-emerald-600/30 transition-all font-mono text-xs uppercase"
+            >
+              Testar
+            </button>
+          </div>
+        </div>
       </SectionCard>
 
       {/* Data Management */}

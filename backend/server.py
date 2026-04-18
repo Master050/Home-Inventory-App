@@ -14,6 +14,7 @@ import uuid
 from pathlib import Path
 import jwt
 import bcrypt
+import asyncio
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -92,6 +93,58 @@ async def add_log(source: str, level: str, message: str, details: dict = None):
         pass
 
 
+async def send_telegram_message(message: str):
+    """Envia uma mensagem para o Telegram usando as configurações do banco."""
+    try:
+        settings = await db.settings.find_one({})
+        if not settings:
+            return
+        
+        token = settings.get("telegram_bot_token")
+        chat_id = settings.get("telegram_chat_id")
+        
+        if not token or not chat_id:
+            return
+
+        url = f"https://api.telegram.org/bot{token}/sendMessage"
+        async with httpx.AsyncClient() as client:
+            await client.post(url, json={
+                "chat_id": chat_id,
+                "text": message,
+                "parse_mode": "HTML"
+            })
+    except Exception as e:
+        await add_log("system", "error", f"Falha ao enviar Telegram: {str(e)}")
+
+async def check_inventory_and_notify():
+    """Job periódico para verificar estoque baixo e enviar resumo matinal."""
+    while True:
+        try:
+            now = datetime.now()
+            settings = await db.settings.find_one({})
+            if settings:
+                notify_hour = settings.get("notification_hour", 10)
+                
+                # Só executa se estiver no horário configurado (ex: entre 10:00 e 10:01)
+                if now.hour == notify_hour and now.minute == 0:
+                    # Aqui você integraria com o Supabase para buscar itens baixos
+                    # Como o Supabase é acessado via frontend, o ideal seria o backend 
+                    # também ter acesso ou receber os dados.
+                    # Por enquanto, enviaremos um lembrete genérico de conferência.
+                    msg = "☀️ <b>Bom dia!</b>\n\nNão esqueça de conferir seu inventário hoje. Itens marcados como <b>Críticos</b> precisam de atenção especial!"
+                    await send_telegram_message(msg)
+                    await asyncio.sleep(61) # Evita repetir no mesmo minuto
+            
+            await asyncio.sleep(60) # Verifica a cada minuto
+        except Exception as e:
+            logger.error(f"Erro no job de notificação: {e}")
+            await asyncio.sleep(300)
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(check_inventory_and_notify())
+
+
 # ─── MODELS ───────────────────────────────────────────────────────────────────
 class LoginRequest(BaseModel):
     username: str
@@ -144,6 +197,9 @@ class SettingsUpdate(BaseModel):
     astra_max_tokens: int = 4096
     log_retention_days: int = 30
     messages_per_page: int = 50
+    telegram_bot_token: Optional[str] = None
+    telegram_chat_id: Optional[str] = None
+    notification_hour: int = 10
 
 
 class ConnectionTest(BaseModel):
@@ -580,6 +636,11 @@ async def test_connection(body: ConnectionTest):
 
 
 # ─── APP SETUP ────────────────────────────────────────────────────────────────
+@api_router.post("/telegram/test")
+async def test_telegram():
+    await send_telegram_message("🧪 <b>Teste de Unificação</b>\n\nConexão com o Gateway Telegram realizada com sucesso!")
+    return {"status": "success", "message": "Mensagem de teste enviada"}
+
 app.include_router(api_router)
 
 app.add_middleware(

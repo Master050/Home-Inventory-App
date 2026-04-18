@@ -2,14 +2,16 @@ import React, { useState, useRef } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { motion, AnimatePresence } from "framer-motion";
 import MatrixRain from "./MatrixRain";
 import {
-  LayoutDashboard, ShoppingCart, Settings, ChevronLeft, ChevronRight, Home, LogOut, User, Shield, Eye
+  LayoutDashboard, ShoppingCart, Settings, ChevronLeft, ChevronRight, Home, LogOut, User, Shield, Eye, Trash2
 } from "lucide-react";
 
 const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/inventory", label: "Estoque", icon: ShoppingCart },
+  { path: "/waste-log", label: "Desperdício", icon: Trash2 },
 ];
 
 const bottomItems = [
@@ -81,17 +83,22 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
 
   return (
     <>
-    <aside
+    <motion.aside
       data-testid="sidebar"
+      initial={false}
+      animate={{
+        x: isMobile ? (collapsed ? "-100%" : 0) : 0,
+        width: isMobile ? "280px" : (collapsed ? "72px" : "272px"),
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className={`fixed top-0 left-0 h-screen z-[80] flex flex-col transition-all duration-300 ${
-        isMobile ? (collapsed ? "-translate-x-full" : "translate-x-0 shadow-[10px_0_60px_rgba(0,0,0,0.8)]") : ""
+        !isMobile && !collapsed ? "shadow-2xl shadow-black/50" : ""
       }`}
       style={{
-        width: isMobile ? "280px" : (collapsed ? "72px" : "272px"),
         background: isMobile ? "rgba(7,7,12,0.98)" : "rgba(3,3,6,0.92)",
-        backdropFilter: isMobile ? "none" : "blur(30px)", // Otimização performance mobile
+        backdropFilter: isMobile ? "none" : "blur(30px)",
         borderRight: "1px solid rgba(168,85,247,0.15)",
-        boxShadow: "4px 0 40px rgba(0,0,0,0.5)",
+        boxShadow: !collapsed && isMobile ? "20px 0 60px rgba(0,0,0,0.8)" : "none",
       }}
     >
       {/* Logo */}
@@ -372,7 +379,7 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
             </div>
             <div>
               <p className="text-xs text-white font-body leading-none">Home Inventory</p>
-              <p className="text-xs font-mono mt-0.5" style={{ color: "#475569" }}>v2.5.0</p>
+              <p className="text-xs font-mono mt-0.5" style={{ color: "#475569" }}>v2.5.1</p>
             </div>
             <div
               className="ml-auto w-2 h-2 rounded-full flex-shrink-0"
@@ -465,7 +472,7 @@ export default function Sidebar({ collapsed, onToggle, isMobile }) {
           </Tooltip.Provider>
         </div>
       )}
-      </aside>
+      </motion.aside>
       
       {/* Matrix Easter Egg */}
       {showMatrix && <MatrixRain onClose={() => setShowMatrix(false)} />}

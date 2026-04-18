@@ -2,6 +2,12 @@
 
 Este arquivo registra a evolução rápida do sistema v2.0 desde o início de seu ciclo de vida em 2026.
 
+## [2.5.1] - 17-04-2026
+### Fixed
+- **Sidebar Mobile**: Resolvido bug crítico de enquadramento onde a sidebar permanecia fora da tela em dispositivos pequenos.
+- **Animações**: Migração da Sidebar para `Framer Motion` para maior estabilidade em transições mobile.
+- **CSS**: Removidas regras legadas com `!important` que conflitavam com o posicionamento dinâmico.
+
 ## [2.5.0] - 17-04-2026
 ### Added
 - **Navegação Mobile**: Adicionado ícone de Menu (Hambúrguer) e overlay animado com desfoque suave para melhor UX em dispositivos móveis.
@@ -31,4 +37,4 @@ Este arquivo registra a evolução rápida do sistema v2.0 desde o início de se
 - **Core V2**: Nova infraestrutura de navegação e Dashboard interativo.
 
 ---
-*© 2024-2025 Home Inventory System*
+*© 2026 Home Inventory System*

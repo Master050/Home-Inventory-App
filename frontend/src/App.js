@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Inventory from "./pages/Inventory";
 import Settings from "./pages/Settings";
+import WasteLog from "./pages/WasteLog";
 import "./App.css";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
               <Route path="inventory" element={<Inventory />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="waste-log" element={<WasteLog />} />
             </Route>
           </Routes>
         </AuthProvider>

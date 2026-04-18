@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, Trash2, Loader2, Save, ShoppingCart, RefreshCw, Lock, 
   TrendingUp, TrendingDown, Package, AlertTriangle, CheckCircle2,
-  Activity, Zap
+  Activity, Zap, AlertCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
@@ -12,14 +12,19 @@ import ConfirmDialog from "../components/ConfirmDialog";
 
 // Category color mapping
 const CATEGORY_COLORS = {
+  "Carnes": { bg: "#ef4444", text: "#fee2e2", border: "#f87171" },
   "Alimentos": { bg: "#10b981", text: "#d1fae5", border: "#34d399" },
+  "Proteínas": { bg: "#3b82f6", text: "#dbeafe", border: "#60a5fa" },
   "Bebidas": { bg: "#22d3ee", text: "#cffafe", border: "#67e8f9" },
   "Limpeza": { bg: "#a855f7", text: "#f3e8ff", border: "#c084fc" },
   "Higiene": { bg: "#ec4899", text: "#fce7f3", border: "#f472b6" },
   "Geral": { bg: "#6366f1", text: "#e0e7ff", border: "#818cf8" },
   "Utensílios": { bg: "#f59e0b", text: "#fef3c7", border: "#fbbf24" },
-  "Cozinha": { bg: "#ef4444", text: "#fee2e2", border: "#f87171" },
+  "Cozinha": { bg: "#71717a", text: "#f4f4f5", border: "#a1a1aa" },
 };
+
+const UNITS = ["un", "kg", "g", "L", "ml", "cx", "pct"];
+const IMPORTANCE_LEVELS = ["Desejável", "Crítico"];
 
 export default function Inventory() {
   const [items, setItems] = useState([]);
@@ -106,10 +111,23 @@ export default function Inventory() {
     let successCount = 0;
 
     for (const item of dirtyItems) {
-      const { id, nome, categoria, quantidade_atual, quantidade_ideal, preco_ultima_compra } = item;
+      const { 
+        id, nome, categoria, quantidade_atual, quantidade_ideal, 
+        preco_ultima_compra, unidade, importancia, 
+        proteina, gordura, carboidrato, local_armazenamento 
+      } = item;
+      
       const { error } = await supabase
         .from("inventario_casa")
-        .update({ nome, categoria, quantidade_atual, quantidade_ideal, preco_ultima_compra })
+        .update({ 
+          nome, categoria, quantidade_atual, quantidade_ideal, 
+          preco_ultima_compra, unidade, importancia,
+          proteina: parseNum(proteina), 
+          gordura: parseNum(gordura), 
+          carboidrato: parseNum(carboidrato),
+          local_armazenamento,
+          ultimo_visto: now_iso()
+        })
         .eq("id", id);
 
       if (!error) successCount++;
@@ -136,6 +154,13 @@ export default function Inventory() {
       quantidade_atual: 0,
       quantidade_ideal: 1,
       preco_ultima_compra: 0.0,
+      unidade: "un",
+      importancia: "Desejável",
+      proteina: 0,
+      gordura: 0,
+      carboidrato: 0,
+      local_armazenamento: "A definir",
+      criado_em: now_iso(),
     };
 
     const { data, error } = await supabase
@@ -365,11 +390,13 @@ export default function Inventory() {
                   <Activity size={14} className="mx-auto" />
                 </th>
                 <th className="px-3 py-3" style={{ width: "200px" }}>Produto</th>
-                <th className="px-3 py-3" style={{ width: "140px" }}>Categoria</th>
-                <th className="px-3 py-3" style={{ width: "180px" }}>Estoque</th>
+                <th className="px-3 py-3" style={{ width: "120px" }}>Categoria</th>
+                <th className="px-3 py-3" style={{ width: "80px" }}>Un.</th>
                 <th className="px-3 py-3 text-center" style={{ width: "100px" }}>Atual</th>
                 <th className="px-3 py-3 text-center" style={{ width: "100px" }}>Ideal</th>
-                <th className="px-3 py-3 text-right" style={{ width: "120px" }}>Preço Un.</th>
+                <th className="px-3 py-3" style={{ width: "140px" }}>Status/Local</th>
+                <th className="px-3 py-3 text-right" style={{ width: "110px" }}>Preço Un.</th>
+                <th className="px-3 py-3 text-center" style={{ width: "150px" }}>Macros (P/G/C)</th>
                 {isAdmin() && <th className="px-3 py-3 text-center" style={{ width: "80px" }}>Ações</th>}
               </tr>
             </thead>
@@ -470,50 +497,56 @@ export default function Inventory() {
 
                         {/* Category Badge */}
                         <td className="px-3 py-2" style={{ width: "140px" }}>
-                          {isAdmin() ? (
-                            <input
-                              value={item.categoria || ""}
-                              onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
-                              className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 py-1.5 outline-none text-slate-300 placeholder-slate-600"
-                            />
-                          ) : (
-                            <span
-                              className="inline-flex px-3 py-1 rounded-full text-xs font-semibold"
-                              style={{
-                                background: `${categoryColor.bg}20`,
-                                color: categoryColor.text,
-                                border: `1px solid ${categoryColor.border}40`,
-                              }}
-                            >
-                              {item.categoria}
-                            </span>
-                          )}
+                          <select
+                            value={item.categoria || "Geral"}
+                            onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
+                            disabled={!isAdmin()}
+                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-1 py-1 outline-none text-slate-300"
+                          >
+                            {Object.keys(CATEGORY_COLORS).map(cat => (
+                              <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
+                            ))}
+                          </select>
+                        </td>
+
+                        {/* Unit Selector */}
+                        <td className="px-3 py-2" style={{ width: "80px" }}>
+                          <select
+                            value={item.unidade || "un"}
+                            onChange={(e) => handleCellChange(item.id, "unidade", e.target.value)}
+                            disabled={!isAdmin()}
+                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-1 py-1 outline-none text-slate-400 text-xs"
+                          >
+                            {UNITS.map(u => (
+                              <option key={u} value={u} className="bg-slate-900">{u}</option>
+                            ))}
+                          </select>
                         </td>
 
                         {/* Progress Bar */}
-                        <td className="px-3 py-2" style={{ width: "180px" }}>
-                          <div className="space-y-1">
-                            <div className="flex items-center justify-between text-xs">
-                              <span className="text-slate-500">Nível</span>
-                              <span
-                                className="font-bold"
-                                style={{ color: getHealthColor(percentage) }}
-                              >
-                                {percentage.toFixed(0)}%
-                              </span>
-                            </div>
-                            <div className="relative h-2 bg-black/40 rounded-full overflow-hidden border border-white/10">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${percentage}%` }}
-                                transition={{ duration: 1, delay: isMobile ? 0 : index * 0.05 }}
-                                className="h-full rounded-full"
-                                style={{
-                                  background: `linear-gradient(90deg, ${getHealthColor(percentage)}, ${getHealthColor(percentage)}dd)`,
-                                  boxShadow: `0 0 8px ${getHealthColor(percentage)}60`,
-                                }}
-                              />
-                            </div>
+                        <td className="px-3 py-2" style={{ width: "140px" }}>
+                          <div className="flex flex-col gap-1">
+                            <select
+                              value={item.importancia || "Desejável"}
+                              onChange={(e) => handleCellChange(item.id, "importancia", e.target.value)}
+                              disabled={!isAdmin()}
+                              className={`text-[10px] uppercase font-bold px-1 py-0.5 rounded border ${
+                                item.importancia === 'Crítico' 
+                                ? 'bg-red-500/10 border-red-500/30 text-red-400' 
+                                : 'bg-blue-500/10 border-blue-500/30 text-blue-400'
+                              } bg-transparent outline-none`}
+                            >
+                              {IMPORTANCE_LEVELS.map(lvl => (
+                                <option key={lvl} value={lvl} className="bg-slate-900">{lvl}</option>
+                              ))}
+                            </select>
+                            <input
+                              placeholder="Local..."
+                              value={item.local_armazenamento || ""}
+                              onChange={(e) => handleCellChange(item.id, "local_armazenamento", e.target.value)}
+                              disabled={!isAdmin()}
+                              className="bg-transparent border-0 text-[10px] text-slate-500 outline-none hover:text-slate-300"
+                            />
                           </div>
                         </td>
 
@@ -551,39 +584,67 @@ export default function Inventory() {
                         </td>
 
                         {/* Price */}
-                        <td className="px-3 py-2 text-right" style={{ width: "120px" }}>
-                          <div className="flex justify-end items-center gap-1">
-                            <span className="text-slate-500 text-xs">R$</span>
-                        <input
-                          type="text"
-                          value={String(item.preco_ultima_compra).replace(".", ",")}
-                          onChange={(e) =>
-                            handleCellChange(item.id, "preco_ultima_compra", e.target.value)
-                          }
-                          onBlur={(e) => {
-                            // Ao sair do campo, garante formato numérico limpo
-                            const clean = parseNum(e.target.value);
-                            handleCellChange(item.id, "preco_ultima_compra", clean);
-                          }}
-                          disabled={!isAdmin()}
-                          className={`w-24 bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 py-1.5 text-right outline-none text-blue-300 ${
-                            !isAdmin() ? "cursor-default" : ""
-                          }`}
-                        />
+                        <td className="px-3 py-2 text-right" style={{ width: "110px" }}>
+                          <input
+                            type="text"
+                            value={String(item.preco_ultima_compra).replace(".", ",")}
+                            onChange={(e) => handleCellChange(item.id, "preco_ultima_compra", e.target.value)}
+                            onBlur={(e) => handleCellChange(item.id, "preco_ultima_compra", parseNum(e.target.value))}
+                            disabled={!isAdmin()}
+                            className="bg-transparent border-0 text-right outline-none text-blue-300 w-full"
+                          />
+                        </td>
+
+                        {/* Nutrients */}
+                        <td className="px-3 py-2 text-center" style={{ width: "150px" }}>
+                          <div className="flex items-center justify-center gap-1">
+                            <input 
+                              title="Proteína"
+                              placeholder="P"
+                              className="w-10 bg-emerald-500/5 border border-emerald-500/20 text-[10px] text-center rounded text-emerald-300 outline-none"
+                              value={item.proteina || 0}
+                              onChange={(e) => handleCellChange(item.id, "proteina", e.target.value)}
+                            />
+                            <input 
+                              title="Gordura"
+                              placeholder="G"
+                              className="w-10 bg-amber-500/5 border border-amber-500/20 text-[10px] text-center rounded text-amber-300 outline-none"
+                              value={item.gordura || 0}
+                              onChange={(e) => handleCellChange(item.id, "gordura", e.target.value)}
+                            />
+                            <input 
+                              title="Carbo"
+                              placeholder="C"
+                              className="w-10 bg-blue-500/5 border border-blue-500/20 text-[10px] text-center rounded text-blue-300 outline-none"
+                              value={item.carboidrato || 0}
+                              onChange={(e) => handleCellChange(item.id, "carboidrato", e.target.value)}
+                            />
                           </div>
                         </td>
 
                         {/* Actions (Admin Only) */}
                         {isAdmin() && (
                           <td className="px-3 py-2 text-center" style={{ width: "80px" }}>
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => handleDeleteClick(item)}
-                              className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-400/20 rounded transition-all"
-                            >
-                              <Trash2 size={16} />
-                            </motion.button>
+                            <div className="flex items-center justify-center gap-1">
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => handleDeleteClick(item)}
+                                className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-400/20 rounded transition-all"
+                                title="Excluir Item"
+                              >
+                                <Trash2 size={16} />
+                              </motion.button>
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => navigate("/waste-log", { state: { prefill: item } })}
+                                className="p-1.5 text-slate-500 hover:text-rose-400 hover:bg-rose-400/20 rounded transition-all"
+                                title="Registrar Desperdício"
+                              >
+                                <AlertCircle size={16} />
+                              </motion.button>
+                            </div>
                           </td>
                         )}
                       </motion.tr>
