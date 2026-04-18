@@ -1,4 +1,4 @@
-# 🏠 Home Inventory v2.6.6 - Sistema de Gestão Doméstica Proativa
+# 🏠 Home Inventory v2.7.0 - Sistema de Gestão Doméstica Proativa
 
 ## 🎉 Bem-vindo ao seu sistema de inventário inteligente!
 
@@ -30,8 +30,7 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 - Adicionar/editar/deletar itens (Admin)
 - Categorias coloridas (incluindo **Carnes**)
 - Barras de progresso por item
-- **Novos Campos**: Unidades (kg, L, un, etc.), Local de Armazenamento e Importância (Crítico/Desejável)
-- **Rastreamento de Macros**: Proteína, Gordura e Carboidrato por item
+- **Unidades Adaptáveis**: Unidades (kg, L, un, etc.), Local de Armazenamento e Importância (Crítico/Desejável)
 
 ### 🗑️ Log de Desperdícios
 - Página dedicada para registro de perdas e itens vencidos
@@ -113,6 +112,12 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 ## 📝 Changelog Recente (2026)
 
+### v2.7.0 (Atual)
+- **Layout Adaptativo Total**: Remoção da restrição de 1600px; a tabela agora se expande para ocupar **98% da tela** em qualquer monitor.
+- **Interface Simplificada**: Remoção completa da coluna e funcionalidade de **Macros (P/G/C)** para maior foco no essencial.
+- **Fix de Renderização**: Correção do erro que causava tela preta na página de **Desperdício** (WasteLog).
+- **Consolidação de Docs**: Unificação do changelog no README e remoção de arquivos duplicados.
+
 ### v2.6.6 (Agora)
 - **Equilíbrio Proporcional**: Redistribuição inteligente de colunas para eliminar o "vácuo" central em monitores ultra-wide.
 - **Proteção de Texto**: Aumento das colunas de Categoria e Status para evitar nomes cortados.
@@ -147,10 +152,10 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 **Desenvolvido por:** Master050  
 **Licença:** Privada  
-**Versão:** 2.6.3  
+**Versão:** 2.7.0  
 **Ano:** 2026
 
 ---
 
 **Status:** 🟢 PRODUÇÃO  
-**Última Atualização:** 18 de Abril de 2026 (v2.6.3)
+**Última Atualização:** 18 de Abril de 2026 (v2.7.0)

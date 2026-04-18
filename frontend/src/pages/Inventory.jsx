@@ -248,7 +248,7 @@ export default function Inventory() {
     : 100;
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-[98%] mx-auto w-full px-2 sm:px-4 py-8 space-y-8">
       {/* Confirm Delete Dialog */}
       <ConfirmDialog
         isOpen={!!deleteConfirm}
@@ -382,22 +382,32 @@ export default function Inventory() {
         transition={{ delay: 0.1 }}
         className="glass-card card-shine overflow-hidden"
       >
-        <div className="w-full overflow-x-auto max-w-[1600px] mx-auto" ref={scrollRef}>
+        <div className="w-full overflow-x-auto scrollbar-hide" ref={scrollRef}>
           <table className="w-full text-sm text-left table-fixed">
-            <thead className="bg-black/40 text-xs font-mono uppercase text-slate-400 border-b border-white/10">
+            <colgroup>
+              <col style={{ width: "50px" }} />
+              <col style={{ width: "auto" }} />
+              <col style={{ width: "160px" }} />
+              <col style={{ width: "90px" }} />
+              <col style={{ width: "90px" }} />
+              <col style={{ width: "90px" }} />
+              <col style={{ width: "220px" }} />
+              <col style={{ width: "120px" }} />
+              {isAdmin() && <col style={{ width: "120px" }} />}
+            </colgroup>
+            <thead className="bg-black/60 text-[10px] font-mono uppercase text-slate-400 border-b border-white/10">
               <tr>
-                <th className="px-3 py-3 w-[50px] shrink-0">
+                <th className="px-3 py-4 text-center">
                   <Activity size={14} className="mx-auto" />
                 </th>
-                <th className="px-3 py-3 w-auto min-w-[350px]">Produto</th>
-                <th className="px-3 py-3 w-[180px] shrink-0 text-center">Categoria</th>
-                <th className="px-3 py-3 w-[95px] shrink-0 text-center">Un.</th>
-                <th className="px-3 py-3 text-center w-[100px] shrink-0">Atual</th>
-                <th className="px-3 py-3 text-center w-[100px] shrink-0">Ideal</th>
-                <th className="px-3 py-3 w-[200px] shrink-0 text-center">Status/Local</th>
-                <th className="px-3 py-3 text-right w-[130px] shrink-0">Preço Un.</th>
-                <th className="px-3 py-3 text-center w-[180px] shrink-0 text-xs">Macros (P/G/C)</th>
-                {isAdmin() && <th className="px-3 py-3 text-center w-[100px] shrink-0">Ações</th>}
+                <th className="px-3 py-4">Produto</th>
+                <th className="px-3 py-4 text-center">Categoria</th>
+                <th className="px-3 py-4 text-center">Un.</th>
+                <th className="px-3 py-4 text-center">Atual</th>
+                <th className="px-3 py-4 text-center">Ideal</th>
+                <th className="px-3 py-4 text-center">Status/Local</th>
+                <th className="px-3 py-4 text-right">Preço Un.</th>
+                {isAdmin() && <th className="px-3 py-4 text-center">Ações</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 font-mono text-slate-300">
@@ -450,25 +460,7 @@ export default function Inventory() {
                         }}
                       >
                         {/* Status Indicator */}
-                        <td className="px-3 py-3" style={{ width: "50px" }}>
-                          {/* Hover Glow Effect */}
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            whileHover={{ opacity: 1 }}
-                            className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 via-cyan-500 to-purple-500"
-                            style={{ boxShadow: "0 0 20px currentColor" }}
-                          />
-
-                          {/* Scanning Effect */}
-                          {isScanning && (
-                            <motion.div
-                              initial={{ left: 0 }}
-                              animate={{ left: "100%" }}
-                              transition={{ duration: 0.5 }}
-                              className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent pointer-events-none"
-                            />
-                          )}
-
+                        <td className="px-3 py-3">
                           <motion.div
                             animate={{
                               scale: outOfStock ? [1, 1.2, 1] : 1,
@@ -484,7 +476,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Product Name */}
-                        <td className="px-3 py-2 w-auto min-w-[350px]">
+                        <td className="px-3 py-2">
                           <input
                             value={item.nome || ""}
                             onChange={(e) => handleCellChange(item.id, "nome", e.target.value)}
@@ -496,136 +488,119 @@ export default function Inventory() {
                         </td>
 
                         {/* Category Badge */}
-                        <td className="px-3 py-2 w-[180px]">
-                          <select
-                            value={item.categoria || "Geral"}
-                            onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
-                            disabled={!isAdmin()}
-                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 pr-8 py-1 outline-none text-slate-300 appearance-none bg-no-repeat bg-[right_0.5rem_center]"
-                          >
-                            {Object.keys(CATEGORY_COLORS).map(cat => (
-                              <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
-                            ))}
-                          </select>
+                        <td className="px-3 py-2">
+                          <div className="relative group/sel">
+                            <select
+                              value={item.categoria || "Geral"}
+                              onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
+                              disabled={!isAdmin()}
+                              className="w-full bg-black/20 border border-white/5 hover:border-white/20 focus:ring-1 focus:ring-purple-500 rounded-lg px-3 pr-10 py-1.5 outline-none text-slate-300 appearance-none transition-all cursor-pointer text-xs"
+                            >
+                              {Object.keys(CATEGORY_COLORS).map(cat => (
+                                <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
+                              ))}
+                            </select>
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 group-hover/sel:text-purple-400 transition-colors">
+                              <ChevronDown size={14} />
+                            </div>
+                          </div>
                         </td>
 
                         {/* Unit Selector */}
-                        <td className="px-3 py-2 w-[95px] relative z-20">
-                          <select
-                            value={item.unidade || "un"}
-                            onChange={(e) => handleCellChange(item.id, "unidade", e.target.value)}
-                            disabled={!isAdmin()}
-                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 pr-6 py-1 outline-none text-slate-400 text-xs appearance-none"
-                          >
-                            {UNITS.map(u => (
-                              <option key={u} value={u} className="bg-slate-900">{u}</option>
-                            ))}
-                          </select>
+                        <td className="px-3 py-2">
+                          <div className="relative group/sel">
+                            <select
+                              value={item.unidade || "un"}
+                              onChange={(e) => handleCellChange(item.id, "unidade", e.target.value)}
+                              disabled={!isAdmin()}
+                              className="w-full bg-black/20 border border-white/5 rounded-lg px-2 pr-6 py-1 outline-none text-slate-400 text-[10px] appearance-none text-center"
+                            >
+                              {UNITS.map(u => (
+                                <option key={u} value={u} className="bg-slate-900">{u}</option>
+                              ))}
+                            </select>
+                            <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none text-slate-600">
+                              <ChevronDown size={10} />
+                            </div>
+                          </div>
                         </td>
 
                         {/* Atual */}
-                        <td className="px-3 py-2 text-center w-[100px]">
+                        <td className="px-3 py-2 text-center">
                           <input
                             type="text"
                             value={String(item.quantidade_atual).replace(".", ",")}
                             onChange={(e) => handleCellChange(item.id, "quantidade_atual", e.target.value)}
-                            onBlur={(e) => {
-                              const clean = parseNum(e.target.value);
-                              handleCellChange(item.id, "quantidade_atual", clean);
-                            }}
+                            onBlur={(e) => handleCellChange(item.id, "quantidade_atual", parseNum(e.target.value))}
                             disabled={!isAdmin()}
-                            className={`w-full max-w-[70px] bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none ${
-                              !isAdmin() ? "cursor-default" : ""
-                            }`}
+                            className="w-full max-w-[60px] bg-black/40 border border-white/10 focus:border-purple-500 rounded px-2 py-1 text-center outline-none font-mono"
                           />
                         </td>
 
                         {/* Ideal */}
-                        <td className="px-3 py-2 text-center w-[100px]">
+                        <td className="px-3 py-2 text-center">
                           <input
                             type="text"
                             value={String(item.quantidade_ideal).replace(".", ",")}
                             onChange={(e) => handleCellChange(item.id, "quantidade_ideal", e.target.value)}
-                            onBlur={(e) => {
-                              const clean = parseNum(e.target.value);
-                              handleCellChange(item.id, "quantidade_ideal", clean);
-                            }}
+                            onBlur={(e) => handleCellChange(item.id, "quantidade_ideal", parseNum(e.target.value))}
                             disabled={!isAdmin()}
-                            className={`w-full max-w-[70px] bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none opacity-80 ${
-                              !isAdmin() ? "cursor-default" : ""
-                            }`}
+                            className="w-full max-w-[60px] bg-black/20 border border-white/5 focus:border-purple-500 rounded px-2 py-1 text-center outline-none font-mono text-slate-500"
                           />
                         </td>
 
                         {/* Status/Local */}
-                        <td className="px-3 py-2" style={{ width: "200px" }}>
-                          <div className="flex flex-col">
-                            <select
-                              value={item.importancia || "Desejável"}
-                              onChange={(e) => handleCellChange(item.id, "importancia", e.target.value)}
-                              disabled={!isAdmin()}
-                              className={`text-[9px] uppercase font-bold px-2 pr-8 py-1 rounded border appearance-none ${
-                                item.importancia === 'Crítico' 
-                                ? 'bg-red-500/10 border-red-500/20 text-red-400' 
-                                : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
-                              } bg-transparent outline-none mb-1 cursor-pointer`}
-                            >
-                              {IMPORTANCE_LEVELS.map(lvl => (
-                                <option key={lvl} value={lvl} className="bg-slate-900">{lvl}</option>
-                              ))}
-                            </select>
+                        <td className="px-3 py-2">
+                          <div className="flex flex-col gap-1">
+                            <div className="relative group/sel">
+                              <select
+                                value={item.importancia || "Desejável"}
+                                onChange={(e) => handleCellChange(item.id, "importancia", e.target.value)}
+                                disabled={!isAdmin()}
+                                className={`w-full text-[9px] uppercase font-bold px-2 pr-8 py-1 rounded-md border appearance-none transition-all cursor-pointer ${
+                                  item.importancia === 'Crítico' 
+                                  ? 'bg-red-500/10 border-red-500/20 text-red-400' 
+                                  : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+                                } bg-transparent outline-none`}
+                              >
+                                {IMPORTANCE_LEVELS.map(lvl => (
+                                  <option key={lvl} value={lvl} className="bg-slate-900">{lvl}</option>
+                                ))}
+                              </select>
+                              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
+                                <ChevronDown size={10} />
+                              </div>
+                            </div>
                             <input
                               placeholder="Local..."
                               value={item.local_armazenamento || ""}
                               onChange={(e) => handleCellChange(item.id, "local_armazenamento", e.target.value)}
                               disabled={!isAdmin()}
-                              className="bg-transparent border-0 text-[10px] text-slate-500 outline-none hover:text-slate-300 w-full truncate px-1"
+                              className="bg-transparent border-0 text-[10px] text-slate-500 outline-none hover:text-slate-300 w-full truncate px-1 text-center"
                             />
                           </div>
                         </td>
 
                         {/* Price */}
-                        <td className="px-3 py-2 text-right" style={{ width: "130px" }}>
-                          <input
-                            type="text"
-                            value={String(item.preco_ultima_compra).replace(".", ",")}
-                            onChange={(e) => handleCellChange(item.id, "preco_ultima_compra", e.target.value)}
-                            onBlur={(e) => handleCellChange(item.id, "preco_ultima_compra", parseNum(e.target.value))}
-                            disabled={!isAdmin()}
-                            className="bg-transparent border-0 text-right outline-none text-blue-300 w-full px-2"
-                          />
-                        </td>
-
-                        {/* Nutrients */}
-                        <td className="px-3 py-2 text-center" style={{ width: "180px" }}>
-                          <div className="flex items-center justify-center gap-1">
-                            <input 
-                              title="Proteína"
-                              placeholder="P"
-                              className="w-10 bg-emerald-500/5 border border-emerald-500/20 text-[10px] text-center rounded text-emerald-300 outline-none"
-                              value={item.proteina || 0}
-                              onChange={(e) => handleCellChange(item.id, "proteina", e.target.value)}
-                            />
-                            <input 
-                              title="Gordura"
-                              placeholder="G"
-                              className="w-10 bg-amber-500/5 border border-amber-500/20 text-[10px] text-center rounded text-amber-300 outline-none"
-                              value={item.gordura || 0}
-                              onChange={(e) => handleCellChange(item.id, "gordura", e.target.value)}
-                            />
-                            <input 
-                              title="Carbo"
-                              placeholder="C"
-                              className="w-10 bg-blue-500/5 border border-blue-500/20 text-[10px] text-center rounded text-blue-300 outline-none"
-                              value={item.carboidrato || 0}
-                              onChange={(e) => handleCellChange(item.id, "carboidrato", e.target.value)}
+                        <td className="px-3 py-2 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <span className="text-[9px] text-slate-600">R$</span>
+                            <input
+                              type="text"
+                              value={String(item.preco_ultima_compra).replace(".", ",")}
+                              onChange={(e) => handleCellChange(item.id, "preco_ultima_compra", e.target.value)}
+                              onBlur={(e) => handleCellChange(item.id, "preco_ultima_compra", parseNum(e.target.value))}
+                              disabled={!isAdmin()}
+                              className="bg-transparent border-0 text-right outline-none text-blue-300 w-16 px-1 font-mono"
                             />
                           </div>
                         </td>
 
+
+
                         {/* Actions (Admin Only) */}
                         {isAdmin() && (
-                          <td className="px-3 py-2 text-center" style={{ width: "80px" }}>
+                          <td className="px-3 py-2 text-center">
                             <div className="flex items-center justify-center gap-1">
                               <motion.button
                                 whileHover={{ scale: 1.1 }}
@@ -658,35 +633,34 @@ export default function Inventory() {
             {items.length > 0 && (
               <tfoot className="bg-black/90 border-t-2 border-purple-500/30 backdrop-blur-2xl">
                 <tr className="font-bold border-b border-white/5">
-                  <td className="px-3 py-4 w-[50px] shrink-0">
-                    <div className="flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-lg bg-cyan-400/10 flex items-center justify-center border border-cyan-400/20">
-                        <Zap size={16} className="text-cyan-400" />
-                      </div>
-                    </div>
+                  <td className="px-3 py-4 text-center">
+                    <Zap size={16} className="text-cyan-400 mx-auto" />
                   </td>
-                  <td className="px-3 py-2 border-l border-white/5 w-auto min-w-[350px]">
-                    <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block mb-0.5">
-                      Resumo
+                  <td className="px-3 py-2 border-l border-white/5">
+                    <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block mb-0.5 whitespace-nowrap">
+                      Resumo Sincronizado
                     </span>
-                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Visão Geral</div>
-                    <div className="text-sm text-slate-300 font-mono italic">Sincronizado</div>
+                    <div className="text-sm text-slate-500 font-mono italic">Cloud-Active</div>
                   </td>
-                  <td className="px-3 py-2 border-l border-white/5 w-[180px]">
-                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Itens Totais</div>
-                    <div className="text-base text-white font-mono leading-none">{totalItems}</div>
+                  <td className="px-3 py-2 border-l border-white/5 text-center">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Total</div>
+                    <div className="text-base text-white font-mono">{totalItems}</div>
                   </td>
-                  <td className="px-3 py-2 border-l border-white/5 w-[95px]">
+                  <td className="px-3 py-2 border-l border-white/5 text-center">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Falta</div>
-                    <div className="text-base text-red-400 font-mono leading-none">{itemsToBuy.length}</div>
+                    <div className="text-base text-red-400 font-mono">{itemsToBuy.length}</div>
                   </td>
-                  <td colSpan={2} className="px-3 py-2 text-right border-l border-white/5 bg-white/5 w-[200px]">
-                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Valor em Estoque</div>
-                    <div className="text-sm text-slate-300 font-mono leading-none">{formatCurrency(totalValue)}</div>
+                  <td colSpan={2} className="px-3 py-2 text-center border-l border-white/5 bg-white/5">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-600 mb-0.5">Métrica</div>
+                    <div className="text-sm text-slate-600 font-mono">FIXED</div>
                   </td>
-                  <td colSpan={isAdmin() ? 4 : 3} className="px-4 py-2 text-right border-l border-white/10 bg-emerald-500/10">
-                    <div className="text-[9px] font-heading uppercase tracking-widest text-emerald-400 mb-0.5 font-bold">Custo de Reposição Est.</div>
-                    <div className="text-xl text-emerald-400 font-mono tracking-tighter leading-none">
+                  <td className="px-3 py-2 border-l border-white/5 text-right">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5 italic">Stock Value</div>
+                    <div className="text-sm text-blue-300 font-mono">{formatCurrency(totalValue)}</div>
+                  </td>
+                  <td colSpan={2} className="px-4 py-3 text-right border-l border-white/10 bg-emerald-500/10">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-emerald-400 mb-1 font-bold">Custo Est. Reposição</div>
+                    <div className="text-xl text-emerald-400 font-mono tracking-tighter leading-none pulse-subtle">
                       {formatCurrency(totalCostEstimate)}
                     </div>
                   </td>
