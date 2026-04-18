@@ -386,18 +386,18 @@ export default function Inventory() {
           <table className="w-full text-sm text-left min-w-[1000px]">
             <thead className="bg-black/40 text-xs font-mono uppercase text-slate-400 border-b border-white/10">
               <tr>
-                <th className="px-3 py-3" style={{ width: "50px" }}>
+                <th className="px-3 py-3 w-[50px] shrink-0">
                   <Activity size={14} className="mx-auto" />
                 </th>
-                <th className="px-3 py-3" style={{ width: "280px" }}>Produto</th>
-                <th className="px-3 py-3" style={{ width: "110px" }}>Categoria</th>
-                <th className="px-3 py-3" style={{ width: "60px" }}>Un.</th>
-                <th className="px-3 py-3 text-center" style={{ width: "90px" }}>Atual</th>
-                <th className="px-3 py-3 text-center" style={{ width: "90px" }}>Ideal</th>
-                <th className="px-3 py-3" style={{ width: "140px" }}>Status/Local</th>
-                <th className="px-3 py-3 text-right" style={{ width: "110px" }}>Preço Un.</th>
-                <th className="px-3 py-3 text-center" style={{ width: "150px" }}>Macros (P/G/C)</th>
-                {isAdmin() && <th className="px-3 py-3 text-center" style={{ width: "80px" }}>Ações</th>}
+                <th className="px-3 py-3 min-w-[280px]">Produto</th>
+                <th className="px-3 py-3 w-[110px] shrink-0">Categoria</th>
+                <th className="px-4 py-3 w-[70px] shrink-0">Un.</th>
+                <th className="px-3 py-3 text-center w-[90px] shrink-0">Atual</th>
+                <th className="px-3 py-3 text-center w-[90px] shrink-0">Ideal</th>
+                <th className="px-3 py-3 w-[140px] shrink-0">Status/Local</th>
+                <th className="px-3 py-3 text-right w-[110px] shrink-0">Preço Un.</th>
+                <th className="px-3 py-3 text-center w-[150px] shrink-0">Macros (P/G/C)</th>
+                {isAdmin() && <th className="px-3 py-3 text-center w-[80px] shrink-0">Ações</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 font-mono text-slate-300">
@@ -484,7 +484,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Product Name */}
-                        <td className="px-3 py-2" style={{ width: "280px" }}>
+                        <td className="px-3 py-2 min-w-[280px]">
                           <input
                             value={item.nome || ""}
                             onChange={(e) => handleCellChange(item.id, "nome", e.target.value)}
@@ -496,7 +496,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Category Badge */}
-                        <td className="px-3 py-2" style={{ width: "110px" }}>
+                        <td className="px-3 py-2 w-[110px]">
                           <select
                             value={item.categoria || "Geral"}
                             onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
@@ -510,7 +510,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Unit Selector */}
-                        <td className="px-3 py-2" style={{ width: "60px" }}>
+                        <td className="px-4 py-2 w-[70px] relative z-10">
                           <select
                             value={item.unidade || "un"}
                             onChange={(e) => handleCellChange(item.id, "unidade", e.target.value)}
@@ -524,7 +524,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Atual */}
-                        <td className="px-3 py-2 text-center" style={{ width: "90px" }}>
+                        <td className="px-3 py-2 text-center w-[90px]">
                           <input
                             type="text"
                             value={String(item.quantidade_atual).replace(".", ",")}
@@ -541,7 +541,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Ideal */}
-                        <td className="px-3 py-2 text-center" style={{ width: "90px" }}>
+                        <td className="px-3 py-2 text-center w-[90px]">
                           <input
                             type="text"
                             value={String(item.quantidade_ideal).replace(".", ",")}
@@ -655,31 +655,28 @@ export default function Inventory() {
               )}
             </tbody>
 
-            {/* Footer Summary */}
             {items.length > 0 && (
               <tfoot className="bg-black/90 border-t-2 border-purple-500/30 backdrop-blur-2xl">
                 <tr className="font-bold border-b border-white/5">
-                  <td colSpan={2} className="px-3 py-4">
-                    <div className="flex items-center gap-2">
+                  <td className="px-3 py-4 w-[50px] shrink-0">
+                    <div className="flex items-center justify-center">
                       <div className="w-8 h-8 rounded-lg bg-cyan-400/10 flex items-center justify-center border border-cyan-400/20">
                         <Zap size={16} className="text-cyan-400" />
                       </div>
-                      <div>
-                        <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block">
-                          Resumo
-                        </span>
-                      </div>
                     </div>
                   </td>
-                  <td className="px-3 py-2 text-center border-l border-white/5">
+                  <td className="px-3 py-2 border-l border-white/5">
+                    <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block mb-0.5">
+                      Resumo
+                    </span>
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Itens</div>
-                    <div className="text-base text-white font-mono">{totalItems}</div>
+                    <div className="text-base text-white font-mono leading-none">{totalItems}</div>
                   </td>
-                  <td className="px-3 py-2 text-center border-l border-white/5">
+                  <td className="px-3 py-2 text-center border-l border-white/5 w-[110px]">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Falta</div>
-                    <div className="text-base text-red-400 font-mono">{itemsToBuy.length}</div>
+                    <div className="text-base text-red-400 font-mono leading-none">{itemsToBuy.length}</div>
                   </td>
-                  <td colSpan={2} className="px-3 py-2 text-right border-l border-white/5 bg-white/5">
+                  <td colSpan={3} className="px-3 py-2 text-right border-l border-white/5 bg-white/5">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Valor em Estoque</div>
                     <div className="text-sm text-slate-300 font-mono">{formatCurrency(totalValue)}</div>
                   </td>
