@@ -75,6 +75,7 @@ export default function Settings() {
     notification_hour: 10
   });
   const [showToken, setShowToken] = useState(false);
+  const [dbError, setDbError] = useState(null);
 
   useEffect(() => {
     fetchSettings();
@@ -82,6 +83,7 @@ export default function Settings() {
 
   const fetchSettings = async () => {
     try {
+      setDbError(null);
       const { data, error } = await supabase
         .from("app_settings")
         .select("*")
@@ -89,8 +91,15 @@ export default function Settings() {
       
       if (data && !error) {
         setTelegramSettings(data);
-      } else if (error && error.code !== 'PGRST116') { // PGRST116 is code for no rows returned
-        console.error("Erro ao buscar configurações do Supabase:", error);
+      } else if (error) {
+        if (error.code === 'PGRST204' || error.code === 'PGRST116') {
+           // Not found is okay, use defaults
+        } else {
+           console.error("Supabase Error:", error);
+           if (error.message?.includes("app_settings")) {
+             setDbError("A tabela 'app_settings' não foi encontrada no banco.");
+           }
+        }
       }
     } catch (e) {
       console.error("Erro ao buscar configurações:", e);
@@ -356,6 +365,12 @@ export default function Settings() {
         icon={Send}
         color="#0ea5e9"
       >
+        {dbError && (
+          <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-500 text-[10px] font-mono leading-relaxed">
+            ⚠️ <strong>TABLE REQUERIDA:</strong> {dbError} <br/>
+            Para salvar, execute o script SQL de configuração no painel do Supabase.
+          </div>
+        )}
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-mono text-slate-500 uppercase mb-2">Bot Token</label>
@@ -417,15 +432,16 @@ export default function Settings() {
             </button>
             <button
               onClick={async () => {
+                const toastId = toast.loading("Enviando mensagem de teste...");
                 try {
                   const { telegram_bot_token, telegram_chat_id } = telegramSettings;
+                  
                   if (!telegram_bot_token || !telegram_chat_id) {
-                    alert("Configure o Token e Chat ID primeiro.");
+                    toast.error("Preencha o Token e o ID primeiro!", { id: toastId });
                     return;
                   }
 
-                  // Tenta via API direta do Telegram (Resiliência para GitHub Pages)
-                  const msg = "🧪 *Teste de Segurança*\n\nConexão com o cofre de dados Supabase e Gateway Telegram confirmada!";
+                  const msg = "🧪 *Teste de Conexão*\n\nStatus: Online\nGateway: Resiliente\nConexão com Telegram confirmada!";
                   const url = `https://api.telegram.org/bot${telegram_bot_token}/sendMessage`;
                   
                   const resp = await fetch(url, {
@@ -439,13 +455,14 @@ export default function Settings() {
                   });
 
                   if (resp.ok) {
-                    toast.success("Mensagem de teste enviada com sucesso!");
+                    toast.success("Mensagem enviada! Verifique seu Telegram.", { id: toastId });
                   } else {
                     const errData = await resp.json();
-                    alert(`Erro do Telegram: ${errData.description || "Verifique as credenciais"}`);
+                    toast.error(`Telegram negou: ${errData.description || "Erro no Token"}`, { id: toastId });
                   }
                 } catch (e) {
-                  alert("Erro de conexão com o Telegram API.");
+                  toast.error("Erro técnico ao conectar com Telegram.", { id: toastId });
+                  console.error(e);
                 }
               }}
               className="px-4 py-2 bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 rounded-xl hover:bg-emerald-600/30 transition-all font-mono text-xs uppercase"

@@ -1,4 +1,4 @@
-# 🏠 Astra Home Inventory - v2.7.1 - Sistema de Gestão Doméstica Proativa
+# 🏠 Astra Home Inventory - v2.7.2 - Sistema de Gestão Doméstica Proativa
 
 ## 🎉 Bem-vindo ao seu sistema de inventário inteligente!
 
@@ -116,6 +116,11 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 - **Layout Milimétrico**: Refatoração total da tabela de inventário para proporcionalidade flexível. O nome do produto agora ganha o máximo de espaço dinâmico.
 - **Sincronia de Bordas**: O rodapé foi reconstruído matematicamente para alinhar suas linhas verticais perfeitamente com as colunas superiores.
 - **Proteção Visual**: Corrigida a sobreposição de efeitos do tema em cima dos textos das colunas.
+
+#### [2.7.2] - 2026-04-18
+- **Estabilidade:** Fallback automático para valores padrão se o banco Supabase estiver offline.
+- **Resiliência:** Botão "Testar" agora funciona instantaneamente com os valores digitados na tela.
+- **Diagnóstico:** Adicionado aviso na UI se a tabela `app_settings` faltar no Supabase.
 
 #### [2.7.1] - 2026-04-18
 - **Segurança:** Movida configuração do Telegram para o Supabase (Cofre de Dados).
