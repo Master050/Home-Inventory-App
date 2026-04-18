@@ -389,14 +389,14 @@ export default function Inventory() {
                 <th className="px-3 py-3 w-[50px] shrink-0">
                   <Activity size={14} className="mx-auto" />
                 </th>
-                <th className="px-3 py-3 min-w-[280px]">Produto</th>
-                <th className="px-3 py-3 w-[110px] shrink-0">Categoria</th>
-                <th className="px-4 py-3 w-[70px] shrink-0">Un.</th>
+                <th className="px-3 py-3 w-full min-w-[300px]">Produto</th>
+                <th className="px-3 py-3 w-[120px] shrink-0 text-center">Categoria</th>
+                <th className="px-3 py-3 w-[80px] shrink-0 text-center">Un.</th>
                 <th className="px-3 py-3 text-center w-[90px] shrink-0">Atual</th>
                 <th className="px-3 py-3 text-center w-[90px] shrink-0">Ideal</th>
-                <th className="px-3 py-3 w-[140px] shrink-0">Status/Local</th>
+                <th className="px-3 py-3 w-[140px] shrink-0 text-center">Status/Local</th>
                 <th className="px-3 py-3 text-right w-[110px] shrink-0">Preço Un.</th>
-                <th className="px-3 py-3 text-center w-[150px] shrink-0">Macros (P/G/C)</th>
+                <th className="px-3 py-3 text-center w-[150px] shrink-0 text-xs">Macros (P/G/C)</th>
                 {isAdmin() && <th className="px-3 py-3 text-center w-[80px] shrink-0">Ações</th>}
               </tr>
             </thead>
@@ -484,7 +484,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Product Name */}
-                        <td className="px-3 py-2 min-w-[280px]">
+                        <td className="px-3 py-2 w-full min-w-[300px]">
                           <input
                             value={item.nome || ""}
                             onChange={(e) => handleCellChange(item.id, "nome", e.target.value)}
@@ -496,7 +496,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Category Badge */}
-                        <td className="px-3 py-2 w-[110px]">
+                        <td className="px-3 py-2 w-[120px]">
                           <select
                             value={item.categoria || "Geral"}
                             onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
@@ -510,7 +510,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Unit Selector */}
-                        <td className="px-4 py-2 w-[70px] relative z-10">
+                        <td className="px-3 py-2 w-[80px] relative z-20">
                           <select
                             value={item.unidade || "un"}
                             onChange={(e) => handleCellChange(item.id, "unidade", e.target.value)}
@@ -665,24 +665,28 @@ export default function Inventory() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-3 py-2 border-l border-white/5">
+                  <td className="px-3 py-2 border-l border-white/5 w-full min-w-[300px]">
                     <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block mb-0.5">
                       Resumo
                     </span>
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Visão Geral</div>
+                    <div className="text-sm text-slate-300 font-mono italic">Sincronizado</div>
+                  </td>
+                  <td className="px-3 py-2 border-l border-white/5 w-[120px]">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Itens</div>
                     <div className="text-base text-white font-mono leading-none">{totalItems}</div>
                   </td>
-                  <td className="px-3 py-2 text-center border-l border-white/5 w-[110px]">
+                  <td className="px-3 py-2 border-l border-white/5 w-[80px]">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Falta</div>
                     <div className="text-base text-red-400 font-mono leading-none">{itemsToBuy.length}</div>
                   </td>
-                  <td colSpan={3} className="px-3 py-2 text-right border-l border-white/5 bg-white/5">
+                  <td colSpan={2} className="px-3 py-2 text-right border-l border-white/5 bg-white/5 w-[180px]">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Valor em Estoque</div>
-                    <div className="text-sm text-slate-300 font-mono">{formatCurrency(totalValue)}</div>
+                    <div className="text-sm text-slate-300 font-mono leading-none">{formatCurrency(totalValue)}</div>
                   </td>
                   <td colSpan={isAdmin() ? 4 : 3} className="px-4 py-2 text-right border-l border-white/10 bg-emerald-500/10">
-                    <div className="text-[9px] font-heading uppercase tracking-widest text-emerald-400 mb-0.5">Custo de Reposição</div>
-                    <div className="text-xl text-emerald-400 font-mono tracking-tighter">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-emerald-400 mb-0.5 font-bold">Custo de Reposição Est.</div>
+                    <div className="text-xl text-emerald-400 font-mono tracking-tighter leading-none">
                       {formatCurrency(totalCostEstimate)}
                     </div>
                   </td>
