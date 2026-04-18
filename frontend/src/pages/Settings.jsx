@@ -360,6 +360,9 @@ export default function Settings() {
               value={telegramSettings.telegram_chat_id || ""}
               onChange={(e) => setTelegramSettings({...telegramSettings, telegram_chat_id: e.target.value})}
             />
+            <p className="mt-1 text-[10px] text-slate-500 font-mono">
+              💡 Dica: Pesquise por <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-sky-400 hover:underline">@userinfobot</a> no Telegram para descobrir seu ID numérico.
+            </p>
           </div>
           <div className="flex items-center justify-between p-4 rounded-xl bg-black/20 border border-white/10">
             <div>
@@ -498,7 +501,7 @@ export default function Settings() {
       >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
-            { label: "Versão", value: "2.0.0", color: "#a855f7" },
+            { label: "Versão", value: "2.7.0", color: "#a855f7" },
             { label: "Backend", value: "FastAPI + MongoDB", color: "#22d3ee" },
             { label: "Frontend", value: "React 19 + Tailwind", color: "#10b981" },
           ].map((info, i) => (
