@@ -420,6 +420,72 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
+      {/* ── Guia Rápido do Sistema ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="glass-card p-4 border border-white/5 bg-white/(0.02) backdrop-blur-md relative overflow-hidden"
+      >
+        <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
+          <Target size={14} className="text-cyan-400" />
+          <h3 className="text-[10px] font-mono font-bold tracking-[0.2em] text-cyan-400 uppercase">
+            Manual de Operação v2.6
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex gap-3">
+            <div className="mt-1 p-1.5 rounded bg-red-500/10 border border-red-500/20">
+              <Zap size={12} className="text-red-400" />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-white mb-1 uppercase tracking-tight">Importância</p>
+              <p className="text-[10px] text-slate-400 leading-relaxed">
+                <span className="text-red-400 font-bold">CRÍTICO:</span> Itens essenciais, repor imediatamente.<br/>
+                <span className="text-blue-300 font-bold">DESEJÁVEL:</span> Itens de conforto ou estoque longo.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <div className="mt-1 p-1.5 rounded bg-cyan-500/10 border border-cyan-500/20">
+              <Package size={12} className="text-cyan-400" />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-white mb-1 uppercase tracking-tight">Unidades & Local</p>
+              <p className="text-[10px] text-slate-400 leading-relaxed">
+                Use <span className="text-white">kg/g/un</span> para precisão. O campo <span className="text-white">Local</span> ajuda a encontrar o item rapidamente na despensa ou freezer.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <div className="mt-1 p-1.5 rounded bg-purple-500/10 border border-purple-500/20">
+              <Activity size={12} className="text-purple-400" />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-white mb-1 uppercase tracking-tight">Nutrientes (Macros)</p>
+              <p className="text-[10px] text-slate-400 leading-relaxed">
+                Controle o total de <span className="text-emerald-400">Proteína</span>, <span className="text-amber-400">Gordura</span> e <span className="text-blue-400">Carbo</span> em estoque no painel abaixo.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <div className="mt-1 p-1.5 rounded bg-amber-500/10 border border-amber-500/20">
+              <AlertTriangle size={12} className="text-amber-400" />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-white mb-1 uppercase tracking-tight">Desperdício (!)</p>
+              <p className="text-[10px] text-slate-400 leading-relaxed">
+                Clique no ícone de <span className="text-amber-400 font-bold">Exclamação</span> na lista de estoque para registrar perdas ou itens vencidos no log.
+              </p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       {/* ── Grid Principal de Cards com Trends ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard

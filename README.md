@@ -113,6 +113,11 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 ## 📝 Changelog Recente (2026)
 
+### v2.6.1 (Agora)
+- **Correção de UI**: Ajustado o alinhamento de colunas no Inventário (Atual/Ideal/Status) que estava trocado.
+- **UX**: Adicionado painel de "Manual de Operação" no Dashboard para facilitar o entendimento das novas métricas.
+- **Visual**: Compactação da célula de Status/Local para manter a uniformidade das linhas.
+
 ### v2.6.0 (Hoje)
 - **Gestão Proativa**: Adicionado Log de Desperdício e Ação Rápida no estoque.
 - **Saúde Nutricional**: Rastreamento de Macronutrientes e painel de Macros no Dashboard.
@@ -129,13 +134,13 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 **Desenvolvido por:** Master050  
 **Licença:** Privada  
-**Versão:** 2.6.0  
+**Versão:** 2.6.1  
 **Ano:** 2026
 
 ---
 
 **Status:** 🟢 PRODUÇÃO  
-**Última Atualização:** 18 de Abril de 2026 (v2.6.0)
+**Última Atualização:** 18 de Abril de 2026 (v2.6.1)
 
 ---
 

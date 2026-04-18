@@ -523,33 +523,7 @@ export default function Inventory() {
                           </select>
                         </td>
 
-                        {/* Progress Bar */}
-                        <td className="px-3 py-2" style={{ width: "140px" }}>
-                          <div className="flex flex-col gap-1">
-                            <select
-                              value={item.importancia || "Desejável"}
-                              onChange={(e) => handleCellChange(item.id, "importancia", e.target.value)}
-                              disabled={!isAdmin()}
-                              className={`text-[10px] uppercase font-bold px-1 py-0.5 rounded border ${
-                                item.importancia === 'Crítico' 
-                                ? 'bg-red-500/10 border-red-500/30 text-red-400' 
-                                : 'bg-blue-500/10 border-blue-500/30 text-blue-400'
-                              } bg-transparent outline-none`}
-                            >
-                              {IMPORTANCE_LEVELS.map(lvl => (
-                                <option key={lvl} value={lvl} className="bg-slate-900">{lvl}</option>
-                              ))}
-                            </select>
-                            <input
-                              placeholder="Local..."
-                              value={item.local_armazenamento || ""}
-                              onChange={(e) => handleCellChange(item.id, "local_armazenamento", e.target.value)}
-                              disabled={!isAdmin()}
-                              className="bg-transparent border-0 text-[10px] text-slate-500 outline-none hover:text-slate-300"
-                            />
-                          </div>
-                        </td>
-
+                        {/* Atual */}
                         <td className="px-3 py-2 text-center" style={{ width: "100px" }}>
                           <input
                             type="text"
@@ -581,6 +555,33 @@ export default function Inventory() {
                               !isAdmin() ? "cursor-default" : ""
                             }`}
                           />
+                        </td>
+
+                        {/* Status/Local */}
+                        <td className="px-3 py-2" style={{ width: "140px" }}>
+                          <div className="flex flex-col">
+                            <select
+                              value={item.importancia || "Desejável"}
+                              onChange={(e) => handleCellChange(item.id, "importancia", e.target.value)}
+                              disabled={!isAdmin()}
+                              className={`text-[9px] uppercase font-bold px-1 py-0.5 rounded border ${
+                                item.importancia === 'Crítico' 
+                                ? 'bg-red-500/10 border-red-500/20 text-red-400' 
+                                : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+                              } bg-transparent outline-none mb-1`}
+                            >
+                              {IMPORTANCE_LEVELS.map(lvl => (
+                                <option key={lvl} value={lvl} className="bg-slate-900">{lvl}</option>
+                              ))}
+                            </select>
+                            <input
+                              placeholder="Local..."
+                              value={item.local_armazenamento || ""}
+                              onChange={(e) => handleCellChange(item.id, "local_armazenamento", e.target.value)}
+                              disabled={!isAdmin()}
+                              className="bg-transparent border-0 text-[10px] text-slate-500 outline-none hover:text-slate-300 w-full truncate"
+                            />
+                          </div>
                         </td>
 
                         {/* Price */}
