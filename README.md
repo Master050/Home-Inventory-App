@@ -1,4 +1,4 @@
-# 🏠 Home Inventory v2.6.5 - Sistema de Gestão Doméstica Proativa
+# 🏠 Home Inventory v2.6.6 - Sistema de Gestão Doméstica Proativa
 
 ## 🎉 Bem-vindo ao seu sistema de inventário inteligente!
 
@@ -113,7 +113,13 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 ## 📝 Changelog Recente (2026)
 
-### v2.6.5 (Agora)
+### v2.6.6 (Agora)
+- **Equilíbrio Proporcional**: Redistribuição inteligente de colunas para eliminar o "vácuo" central em monitores ultra-wide.
+- **Proteção de Texto**: Aumento das colunas de Categoria e Status para evitar nomes cortados.
+- **Setas de Seleção**: Adicionado padding interno nos seletores para que a seta não sobreponha o texto.
+- **Limite de Stretched**: Adicionada largura máxima de 1600px ao container para manter a densidade visual premium.
+
+### v2.6.5
 - **Grade Rígida**: Reconstrução completa da tabela com alinhamento milimétrico entre cabeçalho, corpo e rodapé.
 - **Sincronia Global**: Atualização da etiqueta de versão na barra lateral e documentação.
 

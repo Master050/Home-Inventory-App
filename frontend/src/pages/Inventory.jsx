@@ -382,22 +382,22 @@ export default function Inventory() {
         transition={{ delay: 0.1 }}
         className="glass-card card-shine overflow-hidden"
       >
-        <div className="w-full overflow-x-auto" ref={scrollRef}>
-          <table className="w-full text-sm text-left min-w-[1000px]">
+        <div className="w-full overflow-x-auto max-w-[1600px] mx-auto" ref={scrollRef}>
+          <table className="w-full text-sm text-left table-fixed">
             <thead className="bg-black/40 text-xs font-mono uppercase text-slate-400 border-b border-white/10">
               <tr>
                 <th className="px-3 py-3 w-[50px] shrink-0">
                   <Activity size={14} className="mx-auto" />
                 </th>
-                <th className="px-3 py-3 w-full min-w-[300px]">Produto</th>
-                <th className="px-3 py-3 w-[120px] shrink-0 text-center">Categoria</th>
-                <th className="px-3 py-3 w-[80px] shrink-0 text-center">Un.</th>
-                <th className="px-3 py-3 text-center w-[90px] shrink-0">Atual</th>
-                <th className="px-3 py-3 text-center w-[90px] shrink-0">Ideal</th>
-                <th className="px-3 py-3 w-[140px] shrink-0 text-center">Status/Local</th>
-                <th className="px-3 py-3 text-right w-[110px] shrink-0">Preço Un.</th>
-                <th className="px-3 py-3 text-center w-[150px] shrink-0 text-xs">Macros (P/G/C)</th>
-                {isAdmin() && <th className="px-3 py-3 text-center w-[80px] shrink-0">Ações</th>}
+                <th className="px-3 py-3 w-auto min-w-[350px]">Produto</th>
+                <th className="px-3 py-3 w-[180px] shrink-0 text-center">Categoria</th>
+                <th className="px-3 py-3 w-[95px] shrink-0 text-center">Un.</th>
+                <th className="px-3 py-3 text-center w-[100px] shrink-0">Atual</th>
+                <th className="px-3 py-3 text-center w-[100px] shrink-0">Ideal</th>
+                <th className="px-3 py-3 w-[200px] shrink-0 text-center">Status/Local</th>
+                <th className="px-3 py-3 text-right w-[130px] shrink-0">Preço Un.</th>
+                <th className="px-3 py-3 text-center w-[180px] shrink-0 text-xs">Macros (P/G/C)</th>
+                {isAdmin() && <th className="px-3 py-3 text-center w-[100px] shrink-0">Ações</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 font-mono text-slate-300">
@@ -484,24 +484,24 @@ export default function Inventory() {
                         </td>
 
                         {/* Product Name */}
-                        <td className="px-3 py-2 w-full min-w-[300px]">
+                        <td className="px-3 py-2 w-auto min-w-[350px]">
                           <input
                             value={item.nome || ""}
                             onChange={(e) => handleCellChange(item.id, "nome", e.target.value)}
                             disabled={!isAdmin()}
-                            className={`w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 py-1.5 outline-none text-white placeholder-slate-600 ${
+                            className={`w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 py-1.5 outline-none text-white placeholder-slate-600 break-words whitespace-normal ${
                               !isAdmin() ? "cursor-default" : ""
                             }`}
                           />
                         </td>
 
                         {/* Category Badge */}
-                        <td className="px-3 py-2 w-[120px]">
+                        <td className="px-3 py-2 w-[180px]">
                           <select
                             value={item.categoria || "Geral"}
                             onChange={(e) => handleCellChange(item.id, "categoria", e.target.value)}
                             disabled={!isAdmin()}
-                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-1 py-1 outline-none text-slate-300"
+                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 pr-8 py-1 outline-none text-slate-300 appearance-none bg-no-repeat bg-[right_0.5rem_center]"
                           >
                             {Object.keys(CATEGORY_COLORS).map(cat => (
                               <option key={cat} value={cat} className="bg-slate-900">{cat}</option>
@@ -510,12 +510,12 @@ export default function Inventory() {
                         </td>
 
                         {/* Unit Selector */}
-                        <td className="px-3 py-2 w-[80px] relative z-20">
+                        <td className="px-3 py-2 w-[95px] relative z-20">
                           <select
                             value={item.unidade || "un"}
                             onChange={(e) => handleCellChange(item.id, "unidade", e.target.value)}
                             disabled={!isAdmin()}
-                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-1 py-1 outline-none text-slate-400 text-xs"
+                            className="w-full bg-transparent border-0 focus:ring-1 focus:ring-purple-500 rounded px-2 pr-6 py-1 outline-none text-slate-400 text-xs appearance-none"
                           >
                             {UNITS.map(u => (
                               <option key={u} value={u} className="bg-slate-900">{u}</option>
@@ -524,7 +524,7 @@ export default function Inventory() {
                         </td>
 
                         {/* Atual */}
-                        <td className="px-3 py-2 text-center w-[90px]">
+                        <td className="px-3 py-2 text-center w-[100px]">
                           <input
                             type="text"
                             value={String(item.quantidade_atual).replace(".", ",")}
@@ -534,14 +534,14 @@ export default function Inventory() {
                               handleCellChange(item.id, "quantidade_atual", clean);
                             }}
                             disabled={!isAdmin()}
-                            className={`w-20 bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none ${
+                            className={`w-full max-w-[70px] bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none ${
                               !isAdmin() ? "cursor-default" : ""
                             }`}
                           />
                         </td>
 
                         {/* Ideal */}
-                        <td className="px-3 py-2 text-center w-[90px]">
+                        <td className="px-3 py-2 text-center w-[100px]">
                           <input
                             type="text"
                             value={String(item.quantidade_ideal).replace(".", ",")}
@@ -551,24 +551,24 @@ export default function Inventory() {
                               handleCellChange(item.id, "quantidade_ideal", clean);
                             }}
                             disabled={!isAdmin()}
-                            className={`w-20 bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none opacity-80 ${
+                            className={`w-full max-w-[70px] bg-black/20 border border-white/10 focus:border-purple-500 rounded px-2 py-1.5 text-center outline-none opacity-80 ${
                               !isAdmin() ? "cursor-default" : ""
                             }`}
                           />
                         </td>
 
                         {/* Status/Local */}
-                        <td className="px-3 py-2" style={{ width: "140px" }}>
+                        <td className="px-3 py-2" style={{ width: "200px" }}>
                           <div className="flex flex-col">
                             <select
                               value={item.importancia || "Desejável"}
                               onChange={(e) => handleCellChange(item.id, "importancia", e.target.value)}
                               disabled={!isAdmin()}
-                              className={`text-[9px] uppercase font-bold px-1 py-0.5 rounded border ${
+                              className={`text-[9px] uppercase font-bold px-2 pr-8 py-1 rounded border appearance-none ${
                                 item.importancia === 'Crítico' 
                                 ? 'bg-red-500/10 border-red-500/20 text-red-400' 
                                 : 'bg-blue-500/10 border-blue-500/20 text-blue-400'
-                              } bg-transparent outline-none mb-1`}
+                              } bg-transparent outline-none mb-1 cursor-pointer`}
                             >
                               {IMPORTANCE_LEVELS.map(lvl => (
                                 <option key={lvl} value={lvl} className="bg-slate-900">{lvl}</option>
@@ -579,25 +579,25 @@ export default function Inventory() {
                               value={item.local_armazenamento || ""}
                               onChange={(e) => handleCellChange(item.id, "local_armazenamento", e.target.value)}
                               disabled={!isAdmin()}
-                              className="bg-transparent border-0 text-[10px] text-slate-500 outline-none hover:text-slate-300 w-full truncate"
+                              className="bg-transparent border-0 text-[10px] text-slate-500 outline-none hover:text-slate-300 w-full truncate px-1"
                             />
                           </div>
                         </td>
 
                         {/* Price */}
-                        <td className="px-3 py-2 text-right" style={{ width: "110px" }}>
+                        <td className="px-3 py-2 text-right" style={{ width: "130px" }}>
                           <input
                             type="text"
                             value={String(item.preco_ultima_compra).replace(".", ",")}
                             onChange={(e) => handleCellChange(item.id, "preco_ultima_compra", e.target.value)}
                             onBlur={(e) => handleCellChange(item.id, "preco_ultima_compra", parseNum(e.target.value))}
                             disabled={!isAdmin()}
-                            className="bg-transparent border-0 text-right outline-none text-blue-300 w-full"
+                            className="bg-transparent border-0 text-right outline-none text-blue-300 w-full px-2"
                           />
                         </td>
 
                         {/* Nutrients */}
-                        <td className="px-3 py-2 text-center" style={{ width: "150px" }}>
+                        <td className="px-3 py-2 text-center" style={{ width: "180px" }}>
                           <div className="flex items-center justify-center gap-1">
                             <input 
                               title="Proteína"
@@ -665,22 +665,22 @@ export default function Inventory() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-3 py-2 border-l border-white/5 w-full min-w-[300px]">
+                  <td className="px-3 py-2 border-l border-white/5 w-auto min-w-[350px]">
                     <span className="text-[10px] font-heading font-bold uppercase tracking-widest text-slate-400 block mb-0.5">
                       Resumo
                     </span>
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Visão Geral</div>
                     <div className="text-sm text-slate-300 font-mono italic">Sincronizado</div>
                   </td>
-                  <td className="px-3 py-2 border-l border-white/5 w-[120px]">
-                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Itens</div>
+                  <td className="px-3 py-2 border-l border-white/5 w-[180px]">
+                    <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Itens Totais</div>
                     <div className="text-base text-white font-mono leading-none">{totalItems}</div>
                   </td>
-                  <td className="px-3 py-2 border-l border-white/5 w-[80px]">
+                  <td className="px-3 py-2 border-l border-white/5 w-[95px]">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Falta</div>
                     <div className="text-base text-red-400 font-mono leading-none">{itemsToBuy.length}</div>
                   </td>
-                  <td colSpan={2} className="px-3 py-2 text-right border-l border-white/5 bg-white/5 w-[180px]">
+                  <td colSpan={2} className="px-3 py-2 text-right border-l border-white/5 bg-white/5 w-[200px]">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Valor em Estoque</div>
                     <div className="text-sm text-slate-300 font-mono leading-none">{formatCurrency(totalValue)}</div>
                   </td>
