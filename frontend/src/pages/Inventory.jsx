@@ -683,7 +683,7 @@ export default function Inventory() {
                     <div className="text-[9px] font-heading uppercase tracking-widest text-slate-500 mb-0.5">Valor em Estoque</div>
                     <div className="text-sm text-slate-300 font-mono">{formatCurrency(totalValue)}</div>
                   </td>
-                  <td colSpan={isAdmin() ? 2 : 1} className="px-4 py-2 text-right border-l border-white/10 bg-emerald-500/10">
+                  <td colSpan={isAdmin() ? 4 : 3} className="px-4 py-2 text-right border-l border-white/10 bg-emerald-500/10">
                     <div className="text-[9px] font-heading uppercase tracking-widest text-emerald-400 mb-0.5">Custo de Reposição</div>
                     <div className="text-xl text-emerald-400 font-mono tracking-tighter">
                       {formatCurrency(totalCostEstimate)}

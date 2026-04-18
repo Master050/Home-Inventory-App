@@ -113,7 +113,11 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 ## 📝 Changelog Recente (2026)
 
-### v2.6.1 (Agora)
+### v2.6.2 (Agora)
+- **Correção de UI**: Corrigido o alinhamento do rodapé do Inventário (Custo de Reposição) que não cobria as colunas de Macros e Ações.
+- **Limpeza**: Removido o espaço vazio à direita no resumo financeiro da tabela.
+
+### v2.6.1 (Recente)
 - **Correção de UI**: Ajustado o alinhamento de colunas no Inventário (Atual/Ideal/Status) que estava trocado.
 - **UX**: Adicionado painel de "Manual de Operação" no Dashboard para facilitar o entendimento das novas métricas.
 - **Visual**: Compactação da célula de Status/Local para manter a uniformidade das linhas.
@@ -134,13 +138,13 @@ Sistema completo de gerenciamento de estoque doméstico com visual futurista, an
 
 **Desenvolvido por:** Master050  
 **Licença:** Privada  
-**Versão:** 2.6.1  
+**Versão:** 2.6.2  
 **Ano:** 2026
 
 ---
 
 **Status:** 🟢 PRODUÇÃO  
-**Última Atualização:** 18 de Abril de 2026 (v2.6.1)
+**Última Atualização:** 18 de Abril de 2026 (v2.6.2)
 
 ---
 
