@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Home-Inventory-App/static/css/main.9ab9213f.css",
-    "main.js": "/Home-Inventory-App/static/js/main.ed282f48.js",
+    "main.css": "/Home-Inventory-App/static/css/main.03d04f52.css",
+    "main.js": "/Home-Inventory-App/static/js/main.df36bfa9.js",
     "index.html": "/Home-Inventory-App/index.html",
-    "main.9ab9213f.css.map": "/Home-Inventory-App/static/css/main.9ab9213f.css.map",
-    "main.ed282f48.js.map": "/Home-Inventory-App/static/js/main.ed282f48.js.map"
+    "main.03d04f52.css.map": "/Home-Inventory-App/static/css/main.03d04f52.css.map",
+    "main.df36bfa9.js.map": "/Home-Inventory-App/static/js/main.df36bfa9.js.map"
   },
   "entrypoints": [
-    "static/css/main.9ab9213f.css",
-    "static/js/main.ed282f48.js"
+    "static/css/main.03d04f52.css",
+    "static/js/main.df36bfa9.js"
   ]
 }
