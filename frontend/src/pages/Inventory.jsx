@@ -384,8 +384,8 @@ export default function Inventory() {
           <table className="w-full text-sm text-left table-fixed">
             <colgroup>
               <col style={{ width: "50px" }} />
-              <col style={{ width: "350px" }} />
-              <col style={{ width: "160px" }} />
+              <col style={{ width: "auto" }} />
+              <col style={{ width: "180px" }} />
               <col style={{ width: "80px" }} />
               <col style={{ width: "90px" }} />
               <col style={{ width: "90px" }} />
