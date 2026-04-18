@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../config/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Plus, Trash2, Loader2, Save, ShoppingCart, RefreshCw, Lock, 
   TrendingUp, TrendingDown, Package, AlertTriangle, CheckCircle2,
-  Activity, Zap, AlertCircle
+  Activity, Zap, AlertCircle, ChevronDown
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
@@ -35,6 +36,9 @@ export default function Inventory() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const scrollRef = useRef(null);
   const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const now_iso = () => new Date().toISOString();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -122,9 +126,6 @@ export default function Inventory() {
         .update({ 
           nome, categoria, quantidade_atual, quantidade_ideal, 
           preco_ultima_compra, unidade, importancia,
-          proteina: parseNum(proteina), 
-          gordura: parseNum(gordura), 
-          carboidrato: parseNum(carboidrato),
           local_armazenamento,
           ultimo_visto: now_iso()
         })
@@ -156,9 +157,6 @@ export default function Inventory() {
       preco_ultima_compra: 0.0,
       unidade: "un",
       importancia: "Desejável",
-      proteina: 0,
-      gordura: 0,
-      carboidrato: 0,
       local_armazenamento: "A definir",
       criado_em: now_iso(),
     };
