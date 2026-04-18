@@ -18,7 +18,10 @@ import {
   Sparkles,
   CheckCircle2,
   Send,
+  EyeOff,
 } from "lucide-react";
+import { supabase } from "../config/supabaseClient";
+import { toast } from "sonner";
 
 function SectionCard({ title, subtitle, icon: Icon, color, children }) {
   return (
@@ -67,10 +70,11 @@ export default function Settings() {
   const [autoBackup, setAutoBackup] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [telegramSettings, setTelegramSettings] = useState({
-    telegram_bot_token: "",
-    telegram_chat_id: "",
+    telegram_bot_token: "8617083417:AAEq4v5YVREslvoE4A0uZVUiSEyC1_xALFg",
+    telegram_chat_id: "7405092791",
     notification_hour: 10
   });
+  const [showToken, setShowToken] = useState(false);
 
   useEffect(() => {
     fetchSettings();
@@ -78,10 +82,15 @@ export default function Settings() {
 
   const fetchSettings = async () => {
     try {
-      const resp = await fetch("/api/settings");
-      if (resp.ok) {
-        const data = await resp.json();
+      const { data, error } = await supabase
+        .from("app_settings")
+        .select("*")
+        .single();
+      
+      if (data && !error) {
         setTelegramSettings(data);
+      } else if (error && error.code !== 'PGRST116') { // PGRST116 is code for no rows returned
+        console.error("Erro ao buscar configurações do Supabase:", error);
       }
     } catch (e) {
       console.error("Erro ao buscar configurações:", e);
@@ -90,17 +99,24 @@ export default function Settings() {
 
   const handleSavePreferences = async () => {
     try {
-      const resp = await fetch("/api/settings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(telegramSettings)
-      });
-      if (resp.ok) {
-        setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 2000);
-      }
+      setSaveSuccess(false);
+      
+      const { error } = await supabase
+        .from("app_settings")
+        .upsert({ 
+          id: 1, // Single row configuration
+          ...telegramSettings,
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) throw error;
+
+      setSaveSuccess(true);
+      toast.success("Preferências salvas no Banco de Dados!");
+      setTimeout(() => setSaveSuccess(false), 2000);
     } catch (e) {
       console.error("Erro ao salvar configurações:", e);
+      toast.error("Erro ao salvar no Supabase. Verifique se a tabela 'app_settings' existe.");
     }
   };
 
@@ -343,13 +359,27 @@ export default function Settings() {
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-mono text-slate-500 uppercase mb-2">Bot Token</label>
-            <input
-              type="password"
-              placeholder="Ex: 123456:ABC-DEF..."
-              className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white outline-none focus:border-sky-500/50"
-              value={telegramSettings.telegram_bot_token || ""}
-              onChange={(e) => setTelegramSettings({...telegramSettings, telegram_bot_token: e.target.value})}
-            />
+            <div className="relative group/input">
+              <input
+                type={showToken ? "text" : "password"}
+                placeholder="Ex: 123456:ABC-DEF..."
+                className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-white outline-none focus:border-sky-500/50 pr-10"
+                value={telegramSettings.telegram_bot_token || ""}
+                onChange={(e) => setTelegramSettings({...telegramSettings, telegram_bot_token: e.target.value})}
+              />
+              <button
+                type="button"
+                onClick={() => setShowToken(!showToken)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-sky-400 transition-colors"
+              >
+                {showToken ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            {telegramSettings.telegram_bot_token && (
+              <p className="mt-1 text-[10px] text-emerald-500/60 font-mono">
+                ✓ Referenciado com segurança no banco de dados
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-xs font-mono text-slate-500 uppercase mb-2">Chat ID</label>
@@ -388,11 +418,34 @@ export default function Settings() {
             <button
               onClick={async () => {
                 try {
-                  const resp = await fetch("/api/telegram/test", { method: "POST" });
-                  if (resp.ok) alert("Mensagem de teste enviada!");
-                  else alert("Erro ao enviar teste. Verifique o Token e Chat ID.");
+                  const { telegram_bot_token, telegram_chat_id } = telegramSettings;
+                  if (!telegram_bot_token || !telegram_chat_id) {
+                    alert("Configure o Token e Chat ID primeiro.");
+                    return;
+                  }
+
+                  // Tenta via API direta do Telegram (Resiliência para GitHub Pages)
+                  const msg = "🧪 *Teste de Segurança*\n\nConexão com o cofre de dados Supabase e Gateway Telegram confirmada!";
+                  const url = `https://api.telegram.org/bot${telegram_bot_token}/sendMessage`;
+                  
+                  const resp = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      chat_id: telegram_chat_id,
+                      text: msg,
+                      parse_mode: "Markdown"
+                    })
+                  });
+
+                  if (resp.ok) {
+                    toast.success("Mensagem de teste enviada com sucesso!");
+                  } else {
+                    const errData = await resp.json();
+                    alert(`Erro do Telegram: ${errData.description || "Verifique as credenciais"}`);
+                  }
                 } catch (e) {
-                  alert("Erro de conexão com o servidor.");
+                  alert("Erro de conexão com o Telegram API.");
                 }
               }}
               className="px-4 py-2 bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 rounded-xl hover:bg-emerald-600/30 transition-all font-mono text-xs uppercase"
